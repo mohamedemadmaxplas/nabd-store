@@ -2566,7 +2566,7 @@ function checkAutoLoginFromTecnoShark() {
             uid: decodedToken.uid,
             name: decodedToken.name || decodedToken.username.split('@')[0],
             phone: decodedToken.phone || '',
-            email: decodedToken.email || `${decodedToken.username.split('@')[0]}@nabd-app.com`,
+            email: decodedToken.email || `${decodedToken.username.split('@')[0]}@tecno.com`,
             username: decodedToken.username,
             address: decodedToken.address || '',
             plan: decodedToken.plan || 'free'
@@ -3266,8 +3266,7 @@ async function resetDailyCounter() {
         if (username.includes('@')) {
             cleanUsername = username.split('@')[0];
         }
-        const email = `${cleanUsername}@nabd-app.com`;
-        
+        const email = `${cleanUsername}@tecno.com`;
         // إنشاء حساب في Firebase Auth
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const firebaseUser = userCredential.user;
@@ -3324,7 +3323,7 @@ async function resetDailyCounter() {
 if (username.includes('@')) {
     cleanUsername = username.split('@')[0];
 }
-const email = `${cleanUsername}@nabd-app.com`;
+const email = `${cleanUsername}@tecno.com`;
                     await auth.signInWithEmailAndPassword(email, password);
                     const firebaseUser = auth.currentUser;
                     currentFirebaseUser = firebaseUser;
@@ -3355,7 +3354,7 @@ const email = `${cleanUsername}@nabd-app.com`;
 if (username.includes('@')) {
     cleanUsername = username.split('@')[0];
 }
-const email = `${cleanUsername}@nabd-app.com`;
+const email = `${cleanUsername}@tecno.com`;
                         await auth.createUserWithEmailAndPassword(email, password);
                         const firebaseUser = auth.currentUser;
                         currentFirebaseUser = firebaseUser;
@@ -5807,7 +5806,7 @@ async function completeLogin() {
         
         // تسجيل الدخول إلى Firebase Auth
         const cleanEmailUsername = username.includes('@') ? username.split('@')[0] : username;
-        const email = `${cleanEmailUsername}@nabd-app.com`;
+       const email = `${cleanEmailUsername}@tecno.com`;
         
         await auth.signInWithEmailAndPassword(email, password);
         const firebaseUser = auth.currentUser;
