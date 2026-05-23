@@ -1973,38 +1973,46 @@
     </div>
     
     <!-- ==================== تبويب إضافة روابط الصور ==================== -->
-    <div id="url-tab" class="image-tab-content" style="display: none;">
-        <div class="url-input-container">
-            <!-- حقل إدخال الرابط -->
-            <div class="url-input-wrapper">
-                <input type="text" id="image-url-input" class="url-input-field" placeholder="https://example.com/image.jpg">
-                <button type="button" class="url-add-btn" onclick="addImageUrl()">
-                    <i class="fas fa-plus"></i> إضافة الرابط
-                </button>
+<div id="url-tab" class="image-tab-content" style="display: none;">
+    <div class="url-input-container">
+        <!-- حقل إدخال الرابط -->
+        <div class="url-input-wrapper">
+            <input type="text" id="image-url-input" class="url-input-field" placeholder="https://example.com/image.jpg">
+            <button type="button" class="url-add-btn" onclick="addImageUrl()">
+                <i class="fas fa-plus"></i> إضافة الرابط
+            </button>
+        </div>
+        
+        <!-- معلومات الروابط الصالحة -->
+        <div class="url-info-box">
+            <i class="fas fa-info-circle url-info-icon"></i> روابط صالحة:
+            <span class="url-info-text">https://i.imgur.com/xxx.jpg</span> |
+            <span class="url-info-text">https://images.unsplash.com/xxx</span> |
+            <span class="url-info-text">https://www.facebook.com/photo/xxx</span>
+        </div>
+        
+        <!-- 🆕 زر رفع الصور عبر ImgBB (أضف هذا الكود) -->
+        <div style="margin: 10px 0; text-align: center;">
+            <button type="button" onclick="window.open('https://imgbb.com/', '_blank')" 
+                    style="background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; width: 100%; font-size: 0.9rem;">
+                <i class="fas fa-external-link-alt"></i> 🌐 رفع الصور عبر ImgBB
+            </button>
+            <p style="font-size: 0.7rem; color: #666; margin-top: 5px;">بعد رفع الصورة، انسخ الرابط المباشر (Direct Link) والصقه في الحقل أعلاه</p>
+        </div>
+        
+        <!-- قائمة الروابط المضافة -->
+        <div class="urls-list-container">
+            <h5 class="urls-list-title">
+                <i class="fas fa-list"></i> الروابط المضافة (<span id="urls-count">0</span>)
+            </h5>
+            <div id="urls-list" class="urls-list">
+                <div style="color: #999; font-size: 0.75rem; width: 100%; text-align: center;">لا توجد روابط مضافة</div>
             </div>
-            
-            <!-- معلومات الروابط الصالحة -->
-            <div class="url-info-box">
-                <i class="fas fa-info-circle url-info-icon"></i> روابط صالحة:
-                <span class="url-info-text">https://i.imgur.com/xxx.jpg</span> |
-                <span class="url-info-text">https://images.unsplash.com/xxx</span> |
-                <span class="url-info-text">https://www.facebook.com/photo/xxx</span>
-            </div>
-            
-            <!-- قائمة الروابط المضافة -->
-            <div class="urls-list-container">
-                <h5 class="urls-list-title">
-                    <i class="fas fa-list"></i> الروابط المضافة (<span id="urls-count">0</span>)
-                </h5>
-                <div id="urls-list" class="urls-list">
-                    <div style="color: #999; font-size: 0.75rem; width: 100%; text-align: center;">لا توجد روابط مضافة</div>
-                </div>
-            </div>
-            
-            <!-- معاينة الصور من الروابط -->
-            <div id="url-preview-container" class="url-preview-container">
-                <div class="empty-url-preview">🔗 أضف روابط لعرض المعاينة</div>
-            </div>
+        </div>
+        
+        <!-- معاينة الصور من الروابط -->
+        <div id="url-preview-container" class="url-preview-container">
+            <div class="empty-url-preview">🔗 أضف روابط لعرض المعاينة</div>
         </div>
     </div>
 </div>
