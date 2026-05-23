@@ -4416,6 +4416,22 @@ async function placeOrder() {
         // إرسال إشعار التيليجرام
     await sendOrderToTelegram(newOrder);
     
+    // رسالة واتساب
+    let message = `🛍️ طلب جديد من نبض:\n`;
+    message += `📋 رقم الطلب: ${orderNumber}\n`;
+    message += `👤 العميل: ${currentUser.name}\n`;
+    message += `📞 الهاتف: ${currentUser.phone}\n`;
+    message += `📍 العنوان: ${address}\n`;
+    message += `━━━━━━━━━━━━━━━━\n`;
+    message += `📦 المنتجات:\n`;
+    cart.forEach(i => {
+        message += `• ${i.name} (${i.size} - ${i.color}) × ${i.quantity} = ${(i.price || 0) * (i.quantity || 0)} ج.م\n`;
+    });
+    message += `━━━━━━━━━━━━━━━━\n`;
+    message += `💰 الإجمالي: ${subtotal} ج.م\n`;
+    message += `━━━━━━━━━━━━━━━━\n`;
+    message += `✅ شكراً لتسوقكم مع نبض`;
+    
     
     
     // تفريغ السلة
