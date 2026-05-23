@@ -4547,17 +4547,18 @@ function displayOrderDetail(order) {
             }
         }
         
-        function showAdminTab(tab) {
-            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-            const targetSection = document.getElementById(`admin-${tab}`);
-            if (targetSection) targetSection.classList.add('active');
-            if (event && event.target) event.target.classList.add('active');
-            if (tab === 'dashboard') renderAdminDashboard();
-            if (tab === 'orders') renderOrdersTable();
-            if (tab === 'inventory') renderInventory();
-            if (tab === 'reports') renderReports();
-        }
+       function showAdminTab(tab) {
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    const targetSection = document.getElementById(`admin-${tab}`);
+    if (targetSection) targetSection.classList.add('active');
+    if (event && event.target) event.target.classList.add('active');
+    
+    if (tab === 'dashboard') renderAdminDashboard();
+    if (tab === 'orders') renderOrdersTable();
+    if (tab === 'inventory') renderInventory();
+    if (tab === 'reports') renderReports();  // تأكد من وجود هذا السطر
+}
         
    // 5️⃣ دالة عرض الإحصائيات في لوحة التحكم (المعدلة)
 async function renderAdminDashboard() {
@@ -5713,23 +5714,58 @@ if (editProductForm) {
     });
 }
 
-       // إصلاح دالة renderReports (جعلها async)
+       // إصلاح دالة renderReports
 async function renderReports() {
+    console.log('📊 جاري تحميل التقارير...');
+    
     const allOrders = await getAllOrdersFromAllUsers();
+    console.log('📦 عدد الطلبات المستلمة:', allOrders.length);
+    
+    if (!allOrders || allOrders.length === 0) {
+        // عرض رسالة إذا لم توجد طلبات
+        const reportsDeliveredOrders = document.getElementById('reports-delivered-orders');
+        if (reportsDeliveredOrders) {
+            reportsDeliveredOrders.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">📭 لا توجد طلبات بعد</div>';
+        }
+        
+        // تعيين القيم صفر
+        const totalSalesEl = document.getElementById('reports-total-sales');
+        const totalProfitEl = document.getElementById('reports-total-profit');
+        const totalOrdersEl = document.getElementById('reports-total-orders');
+        const pendingEl = document.getElementById('reports-pending');
+        const deliveredEl = document.getElementById('reports-delivered');
+        const cancelledEl = document.getElementById('reports-cancelled');
+        const returnedEl = document.getElementById('reports-returned');
+        
+        if (totalSalesEl) totalSalesEl.innerText = '0';
+        if (totalProfitEl) totalProfitEl.innerText = '0';
+        if (totalOrdersEl) totalOrdersEl.innerText = '0';
+        if (pendingEl) pendingEl.innerText = '0';
+        if (deliveredEl) deliveredEl.innerText = '0';
+        if (cancelledEl) cancelledEl.innerText = '0';
+        if (returnedEl) returnedEl.innerText = '0';
+        
+        return;
+    }
     
     const delivered = allOrders.filter(o => o.status === 'delivered');
     const totalSales = delivered.reduce((a, o) => a + (o.total || 0), 0);
-    const totalProfit = delivered.reduce((a, o) => {
-        let profit = 0;
-        if (o.items && Array.isArray(o.items)) {
-            o.items.forEach(i => {
-                const p = products.find(pr => pr.id === i.id);
-                if (p) profit += ((p.price || 0) - (p.cost || 0)) * (i.quantity || 0);
-            });
-        }
-        return a + profit;
-    }, 0);
     
+    // حساب الأرباح
+    let totalProfit = 0;
+    for (const order of delivered) {
+        if (order.items && Array.isArray(order.items)) {
+            for (const item of order.items) {
+                const product = products.find(p => p.id == item.id);
+                if (product) {
+                    const profit = ((product.price || 0) - (product.cost || 0)) * (item.quantity || 0);
+                    totalProfit += profit;
+                }
+            }
+        }
+    }
+    
+    // تحديث الإحصائيات
     const totalSalesEl = document.getElementById('reports-total-sales');
     const totalProfitEl = document.getElementById('reports-total-profit');
     const totalOrdersEl = document.getElementById('reports-total-orders');
@@ -5738,29 +5774,71 @@ async function renderReports() {
     const cancelledEl = document.getElementById('reports-cancelled');
     const returnedEl = document.getElementById('reports-returned');
     
-    if (totalSalesEl) totalSalesEl.innerText = totalSales;
-    if (totalProfitEl) totalProfitEl.innerText = totalProfit;
+    if (totalSalesEl) totalSalesEl.innerText = totalSales.toFixed(2);
+    if (totalProfitEl) totalProfitEl.innerText = totalProfit.toFixed(2);
     if (totalOrdersEl) totalOrdersEl.innerText = allOrders.length;
     if (pendingEl) pendingEl.innerText = allOrders.filter(o => o.status === 'pending').length;
     if (deliveredEl) deliveredEl.innerText = delivered.length;
     if (cancelledEl) cancelledEl.innerText = allOrders.filter(o => o.status === 'cancelled').length;
     if (returnedEl) returnedEl.innerText = allOrders.filter(o => o.status === 'returned').length;
     
-    // آخر 5 طلبات مسلمة
-    const lastDelivered = delivered.slice(-5).reverse();
-    let html = '<div style="overflow-x: auto;"><table class="orders-table" style="width:100%;"><thead><tr><th>' + (currentLang === 'ar' ? 'رقم الطلب' : 'Order #') + '</th><th>' + (currentLang === 'ar' ? 'العميل' : 'Customer') + '</th><th>' + (currentLang === 'ar' ? 'الإجمالي' : 'Total') + '</th><th>' + (currentLang === 'ar' ? 'التاريخ' : 'Date') + '</th></tr></thead><tbody>';
-    lastDelivered.forEach(o => {
-        const orderNum = o.orderNumber || o.number || '---';
-        html += `<tr>
-                    <td>${orderNum}</td>
-                    <td>${o.user?.name || o.userName || '---'}</td>
-                    <td>${o.total || 0}</td>
-                    <td>${o.date || (o.createdAt ? new Date(o.createdAt).toLocaleString() : '---')}</td>
-                 </tr>`;
-    });
-    html += '</tbody></table></div>';
+    // عرض آخر 5 طلبات مسلمة
+    const lastDelivered = [...delivered].sort((a, b) => {
+        const dateA = a.createdAt || a.date || '';
+        const dateB = b.createdAt || b.date || '';
+        return new Date(dateB) - new Date(dateA);
+    }).slice(0, 5);
+    
     const reportsDeliveredOrders = document.getElementById('reports-delivered-orders');
-    if (reportsDeliveredOrders) reportsDeliveredOrders.innerHTML = html;
+    if (reportsDeliveredOrders) {
+        if (lastDelivered.length === 0) {
+            reportsDeliveredOrders.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">📭 لا توجد طلبات مسلمة بعد</div>';
+        } else {
+            let html = `
+                <style>
+                    .reports-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+                    .reports-table th, .reports-table td { padding: 10px; border-bottom: 1px solid #eee; text-align: right; }
+                    .reports-table th { background: #164E63; color: white; }
+                    .reports-table tr:hover { background: #f5f5f5; }
+                </style>
+                <table class="reports-table">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>الإجمالي</th>
+                            <th>التاريخ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            for (const order of lastDelivered) {
+                const orderNum = order.orderNumber || order.number || order.orderId || '---';
+                const customerName = order.user?.name || order.userName || '---';
+                const orderTotal = order.total || 0;
+                const orderDate = order.date || (order.createdAt ? new Date(order.createdAt).toLocaleString('ar-EG') : '---');
+                
+                html += `
+                    <tr>
+                        <td>${orderNum}</td>
+                        <td>${customerName}</td>
+                        <td>${orderTotal} ج.م</td>
+                        <td>${orderDate}</td>
+                    </tr>
+                `;
+            }
+            
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            reportsDeliveredOrders.innerHTML = html;
+        }
+    }
+    
+    console.log('✅ تم تحديث التقارير بنجاح');
 }
 
 // إصلاح دالة renderOrdersTable (جعلها async)
