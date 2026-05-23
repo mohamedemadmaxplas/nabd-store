@@ -5564,9 +5564,7 @@ if (editProductForm) {
     });
 }
 
-        // ==================== إصلاح الدوال التي بها خطأ await ====================
-
-// إصلاح دالة renderReports (جعلها async)
+       // إصلاح دالة renderReports (جعلها async)
 async function renderReports() {
     const allOrders = await getAllOrdersFromAllUsers();
     
@@ -5574,7 +5572,7 @@ async function renderReports() {
     const totalSales = delivered.reduce((a, o) => a + (o.total || 0), 0);
     const totalProfit = delivered.reduce((a, o) => {
         let profit = 0;
-        if (o.items) {
+        if (o.items && Array.isArray(o.items)) {
             o.items.forEach(i => {
                 const p = products.find(pr => pr.id === i.id);
                 if (p) profit += ((p.price || 0) - (p.cost || 0)) * (i.quantity || 0);
@@ -5599,16 +5597,17 @@ async function renderReports() {
     if (cancelledEl) cancelledEl.innerText = allOrders.filter(o => o.status === 'cancelled').length;
     if (returnedEl) returnedEl.innerText = allOrders.filter(o => o.status === 'returned').length;
     
+    // آخر 5 طلبات مسلمة
     const lastDelivered = delivered.slice(-5).reverse();
-    let html = '<div class="inventory-form"><table><thead><tr><th>' + (currentLang === 'ar' ? 'رقم الطلب' : 'Order #') + '</th><th>' + (currentLang === 'ar' ? 'العميل' : 'Customer') + '</th><th>' + (currentLang === 'ar' ? 'الإجمالي' : 'Total') + '</th><th>' + (currentLang === 'ar' ? 'التاريخ' : 'Date') + '</th></tr></thead><tbody>';
+    let html = '<div style="overflow-x: auto;"><table class="orders-table" style="width:100%;"><thead><tr><th>' + (currentLang === 'ar' ? 'رقم الطلب' : 'Order #') + '</th><th>' + (currentLang === 'ar' ? 'العميل' : 'Customer') + '</th><th>' + (currentLang === 'ar' ? 'الإجمالي' : 'Total') + '</th><th>' + (currentLang === 'ar' ? 'التاريخ' : 'Date') + '</th></tr></thead><tbody>';
     lastDelivered.forEach(o => {
         const orderNum = o.orderNumber || o.number || '---';
         html += `<tr>
-            <td>${orderNum}</td>
-            <td>${o.user?.name || o.userName || '---'}</td>
-            <td>${o.total || 0}</td>
-            <td>${o.date || (o.createdAt ? new Date(o.createdAt).toLocaleString() : '---')}</td>
-        </tr>`;
+                    <td>${orderNum}</td>
+                    <td>${o.user?.name || o.userName || '---'}</td>
+                    <td>${o.total || 0}</td>
+                    <td>${o.date || (o.createdAt ? new Date(o.createdAt).toLocaleString() : '---')}</td>
+                 </tr>`;
     });
     html += '</tbody></table></div>';
     const reportsDeliveredOrders = document.getElementById('reports-delivered-orders');
@@ -5638,30 +5637,28 @@ async function renderOrdersTable(filterStatus = 'all', searchTerm = '') {
         const orderNum = o.orderNumber || o.number || '---';
         const orderTotal = o.total || 0;
         html += `<tr>
-            <td>${orderNum}</td>
-            <td>${o.user?.name || o.userName || '---'}</td>
-            <td>${o.user?.phone || o.userPhone || '---'}</td>
-            <td>${o.user?.address || '---'}</td>
-            <td>${o.items ? o.items.map(i => `${i.name} x${i.quantity}`).join('<br>') : '---'}</td>
-            <td>${orderTotal} ج.م</td>
-            <td>
-                <select onchange="updateOrderStatus('${orderNum}', this.value)" style="padding:4px; border-radius:5px;">
-                    <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>${currentLang === 'ar' ? 'معلق' : 'Pending'}</option>
-                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>${currentLang === 'ar' ? 'تم التسليم' : 'Delivered'}</option>
-                    <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>${currentLang === 'ar' ? 'ملغي' : 'Cancelled'}</option>
-                    <option value="returned" ${o.status === 'returned' ? 'selected' : ''}>${currentLang === 'ar' ? 'مرتجع' : 'Returned'}</option>
-                </select>
-            </td>
-            <td><button class="action-btn delete-btn" onclick="deleteOrder('${orderNum}')">${currentLang === 'ar' ? 'حذف' : 'Delete'}</button></td>
-        </tr>`;
+                    <td>${orderNum}</td>
+                    <td>${o.user?.name || o.userName || '---'}</td>
+                    <td>${o.user?.phone || o.userPhone || '---'}</td>
+                    <td>${o.user?.address || '---'}</td>
+                    <td>${o.items ? o.items.map(i => `${i.name} x${i.quantity}`).join('<br>') : '---'}</td>
+                    <td>${orderTotal} ج.م</td>
+                    <td>
+                        <select onchange="updateOrderStatus('${orderNum}', this.value)" style="padding:4px; border-radius:5px;">
+                            <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>${currentLang === 'ar' ? 'معلق' : 'Pending'}</option>
+                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>${currentLang === 'ar' ? 'تم التسليم' : 'Delivered'}</option>
+                            <option value="cancelled" ${o.status === 'cancelled' ? 'selected' : ''}>${currentLang === 'ar' ? 'ملغي' : 'Cancelled'}</option>
+                            <option value="returned" ${o.status === 'returned' ? 'selected' : ''}>${currentLang === 'ar' ? 'مرتجع' : 'Returned'}</option>
+                        </select>
+                    </td>
+                    <td><button class="action-btn delete-btn" onclick="deleteOrder('${orderNum}')">${currentLang === 'ar' ? 'حذف' : 'Delete'}</button></td>
+                 </tr>`;
     });
     
     html += '</tbody></table></div>';
     const ordersTableContainer = document.getElementById('orders-table-container');
     if (ordersTableContainer) ordersTableContainer.innerHTML = html;
 }
-
-console.log('✅ تم إصلاح جميع دوال التقارير بنجاح!');
         
         function exportFullReportPDF() {
             const win = window.open('', '_blank');
