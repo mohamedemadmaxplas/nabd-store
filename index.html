@@ -2827,7 +2827,14 @@ function isValidImageUrl(url) {
 
 
 
-
+// دالة بديلة لـ getDirectImageUrl
+async function getDirectImageUrl(url) {
+    // إذا كان الرابط من فيسبوك
+    if (url.includes('facebook.com') || url.includes('fb.com')) {
+        return await getDirectFacebookImageUrl(url);
+    }
+    return url;
+}
 
 
 
@@ -4416,21 +4423,7 @@ async function placeOrder() {
         // إرسال إشعار التيليجرام
     await sendOrderToTelegram(newOrder);
     
-    // رسالة واتساب
-    let message = `🛍️ طلب جديد من نبض:\n`;
-    message += `📋 رقم الطلب: ${orderNumber}\n`;
-    message += `👤 العميل: ${currentUser.name}\n`;
-    message += `📞 الهاتف: ${currentUser.phone}\n`;
-    message += `📍 العنوان: ${address}\n`;
-    message += `━━━━━━━━━━━━━━━━\n`;
-    message += `📦 المنتجات:\n`;
-    cart.forEach(i => {
-        message += `• ${i.name} (${i.size} - ${i.color}) × ${i.quantity} = ${(i.price || 0) * (i.quantity || 0)} ج.م\n`;
-    });
-    message += `━━━━━━━━━━━━━━━━\n`;
-    message += `💰 الإجمالي: ${subtotal} ج.م\n`;
-    message += `━━━━━━━━━━━━━━━━\n`;
-    message += `✅ شكراً لتسوقكم مع نبض`;
+    
     
     
     
@@ -4446,7 +4439,7 @@ async function placeOrder() {
     showSection('home');
 }
    
-testTelegram();    
+   
         function closeSuccessPopup() {
             document.getElementById('success-popup')?.classList.remove('show');
             showSection('home');
@@ -5468,7 +5461,30 @@ async function handleMultipleImageUpload(files) {
         showToast(`تم رفع ${successCount} صورة بنجاح`, 'success');
     }
 }
-
+// دالة رفع الصور إلى Firebase Storage
+async function uploadImageToStorage(file, productId, index) {
+    if (!currentFirebaseUser && !currentUser) {
+        console.log('⚠️ لا يوجد مستخدم مسجل للرفع');
+        return null;
+    }
+    
+    const userId = currentFirebaseUser?.uid || currentUser?.uid || 'anonymous';
+    const storageRef = storage.ref();
+    const imageRef = storageRef.child(`products/${userId}/${productId}_${index}_${Date.now()}.jpg`);
+    
+    try {
+        // ضغط الصورة قبل الرفع
+        const compressedFile = await compressImage(file, 1024, 1024);
+        
+        const snapshot = await imageRef.put(compressedFile);
+        const downloadURL = await snapshot.ref.getDownloadURL();
+        console.log('✅ تم رفع الصورة بنجاح:', downloadURL);
+        return downloadURL;
+    } catch (error) {
+        console.error('❌ فشل رفع الصورة:', error);
+        return null;
+    }
+}
 function removeEditImageHandler(e) {
     e.stopPropagation();
     const btn = e.currentTarget;
