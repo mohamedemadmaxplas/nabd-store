@@ -4416,23 +4416,7 @@ async function placeOrder() {
         // إرسال إشعار التيليجرام
     await sendOrderToTelegram(newOrder);
     
-    // رسالة واتساب
-    let message = `🛍️ طلب جديد من نبض:\n`;
-    message += `📋 رقم الطلب: ${orderNumber}\n`;
-    message += `👤 العميل: ${currentUser.name}\n`;
-    message += `📞 الهاتف: ${currentUser.phone}\n`;
-    message += `📍 العنوان: ${address}\n`;
-    message += `━━━━━━━━━━━━━━━━\n`;
-    message += `📦 المنتجات:\n`;
-    cart.forEach(i => {
-        message += `• ${i.name} (${i.size} - ${i.color}) × ${i.quantity} = ${(i.price || 0) * (i.quantity || 0)} ج.م\n`;
-    });
-    message += `━━━━━━━━━━━━━━━━\n`;
-    message += `💰 الإجمالي: ${subtotal} ج.م\n`;
-    message += `━━━━━━━━━━━━━━━━\n`;
-    message += `✅ شكراً لتسوقكم مع نبض`;
     
-    window.open(`https://wa.me/201553011171?text=${encodeURIComponent(message)}`, '_blank');
     
     // تفريغ السلة
     cart = [];
@@ -4445,13 +4429,7 @@ async function placeOrder() {
     showToast('✅ تم تأكيد طلبك بنجاح! سيتم التواصل معك قريباً', 'success');
     showSection('home');
 }
-    // اختبار إرسال رسالة إلى التيليجرام
-async function testTelegram() {
-    const testMessage = `🧪 <b>رسالة اختبار من متجر نبض</b>\n✅ البوت يعمل بنجاح!\n📅 الوقت: ${new Date().toLocaleString('ar-EG')}\n\n🚀 تم تفعيل الإشعارات بنجاح`;
-    const result = await sendTelegramMessage(testMessage);
-    if(result) alert('✅ تم الإرسال! تحقق من التيليجرام');
-    else alert('❌ فشل الإرسال');
-}
+   
 testTelegram();    
         function closeSuccessPopup() {
             document.getElementById('success-popup')?.classList.remove('show');
