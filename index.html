@@ -2529,7 +2529,7 @@ function showToast(message, type = 'success') {
     toast.className = `toast-notification ${type} show`;
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
-        // ==================== معالجة التوكن القادم من Tecno Shark ====================
+       // ==================== معالجة التوكن القادم من Tecno Shark ====================
 function checkAutoLoginFromTecnoShark() {
     // الحصول على التوكن من رابط الصفحة
     const urlParams = new URLSearchParams(window.location.search);
@@ -2548,7 +2548,6 @@ function checkAutoLoginFromTecnoShark() {
         // التحقق من صلاحية التوكن (ساعة واحدة)
         if (decodedToken.expires && decodedToken.expires < Date.now()) {
             showToast('⚠️ انتهت صلاحية جلسة تسجيل الدخول', 'error');
-            // إزالة التوكن من الرابط
             window.history.replaceState({}, document.title, window.location.pathname);
             return false;
         }
@@ -2560,63 +2559,52 @@ function checkAutoLoginFromTecnoShark() {
             return false;
         }
         
-        // البحث عن المستخدم في Firebase Database باستخدام UID
-        database.ref(`users/${decodedToken.uid}/profile`).once('value', async (snapshot) => {
-            const userProfile = snapshot.val();
-            
-            if (userProfile) {
-                // ✅ المستخدم موجود في قاعدة البيانات
-                currentUser = {
-                    uid: decodedToken.uid,
-                    name: userProfile.name || decodedToken.name,
-                    phone: userProfile.phone || '',
-                    email: userProfile.email || decodedToken.email,
-                    username: userProfile.username || decodedToken.username,
-                    address: userProfile.address || '',
-                    plan: decodedToken.plan || 'free'
-                };
-                
-                // حفظ في localStorage
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                // تسجيل الدخول إلى Firebase Auth (اختياري - للحفاظ على الجلسة)
-                try {
-                    const email = decodedToken.email || `${decodedToken.username.split('@')[0]}@nabd-app.com`;
-                    await auth.signInWithEmailAndPassword(email, decodedToken.password || 'temp123456');
-                } catch (authError) {
-                    // إذا فشل تسجيل الدخول، نكتفي بالبيانات المحلية
-                    console.log('ℹ️ لم يتم تسجيل الدخول إلى Firebase Auth:', authError.message);
-                }
-                
-                // تحميل السلة والطلبات من Firebase
-                const savedCart = await loadUserCart(decodedToken.uid);
-                const savedOrders = await loadUserOrders(decodedToken.uid);
-                if (savedCart.length > 0) cart = savedCart;
-                if (savedOrders.length > 0) orders = savedOrders;
-                localStorage.setItem('cart', JSON.stringify(cart));
-                localStorage.setItem('orders', JSON.stringify(orders));
-                
-                // تحديث الواجهة
-                updateCartCount();
-                updateAccountButton();
-                
-                showToast(`✅ مرحباً بك ${currentUser.name || currentUser.username || 'عزيزي'}`, 'success');
-                
-                // إزالة التوكن من الرابط (تنظيف)
-                window.history.replaceState({}, document.title, window.location.pathname);
-                
-                // إذا كان المستخدم في صفحة تسجيل الدخول، ننقله للرئيسية
-                const activeSection = document.querySelector('.section.active');
-                if (activeSection && activeSection.id === 'login') {
-                    showSection('home');
-                }
-            } else {
-                // ❌ المستخدم غير موجود في قاعدة البيانات
-                console.warn('⚠️ المستخدم غير موجود في قاعدة البيانات');
-                showToast('⚠️ يرجى إنشاء حساب أولاً', 'error');
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }
-        });
+        // ✅ مهم جداً: تسجيل الدخول المباشر بدون Firebase Auth
+        // نستخدم التوكن مباشرة لإنشاء جلسة المستخدم
+        
+        currentUser = {
+            uid: decodedToken.uid,
+            name: decodedToken.name || decodedToken.username.split('@')[0],
+            phone: decodedToken.phone || '',
+            email: decodedToken.email || `${decodedToken.username.split('@')[0]}@nabd-app.com`,
+            username: decodedToken.username,
+            address: decodedToken.address || '',
+            plan: decodedToken.plan || 'free'
+        };
+        
+        // حفظ في localStorage
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        // ⭐ إضافة المستخدم إلى users array المحلي إذا لم يكن موجوداً
+        if (!users.find(u => u.uid === decodedToken.uid)) {
+            users.push({
+                uid: decodedToken.uid,
+                name: currentUser.name,
+                phone: currentUser.phone,
+                username: currentUser.username,
+                email: currentUser.email,
+                password: decodedToken.password || 'google_auth_user'
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        
+        // محاولة تحميل السلة والطلبات من Firebase Database (بدون Auth)
+        loadUserDataFromDatabase(decodedToken.uid);
+        
+        // تحديث الواجهة
+        updateCartCount();
+        updateAccountButton();
+        
+        showToast(`✅ مرحباً بك ${currentUser.name}`, 'success');
+        
+        // إزالة التوكن من الرابط (تنظيف)
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // إذا كان المستخدم في صفحة تسجيل الدخول، ننقله للرئيسية
+        const activeSection = document.querySelector('.section.active');
+        if (activeSection && activeSection.id === 'login') {
+            showSection('home');
+        }
         
         return true;
         
@@ -2625,6 +2613,45 @@ function checkAutoLoginFromTecnoShark() {
         showToast('❌ حدث خطأ في معالجة تسجيل الدخول', 'error');
         window.history.replaceState({}, document.title, window.location.pathname);
         return false;
+    }
+}
+
+// دالة جديدة لتحميل بيانات المستخدم من Database مباشرة
+async function loadUserDataFromDatabase(uid) {
+    if (!uid) return;
+    
+    try {
+        // تحميل السلة
+        const cartSnapshot = await database.ref(`users/${uid}/cart`).once('value');
+        const savedCart = cartSnapshot.val();
+        if (savedCart && Array.isArray(savedCart) && savedCart.length > 0) {
+            cart = savedCart;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+        
+        // تحميل الطلبات
+        const ordersSnapshot = await database.ref(`users/${uid}/orders`).once('value');
+        const savedOrders = ordersSnapshot.val();
+        if (savedOrders && Array.isArray(savedOrders) && savedOrders.length > 0) {
+            orders = savedOrders;
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+        
+        // تحميل الملف الشخصي
+        const profileSnapshot = await database.ref(`users/${uid}/profile`).once('value');
+        const profile = profileSnapshot.val();
+        if (profile) {
+            currentUser.name = profile.name || currentUser.name;
+            currentUser.phone = profile.phone || currentUser.phone;
+            currentUser.address = profile.address || currentUser.address;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        
+        console.log('✅ تم تحميل بيانات المستخدم بنجاح');
+        
+    } catch (error) {
+        console.error('❌ خطأ في تحميل بيانات المستخدم:', error);
     }
 }
         // Save user cart
@@ -3035,6 +3062,7 @@ async function resetDailyCounter() {
         
         // ==================== INITIALIZATION ====================
         async function initializeData() {
+             
         checkAutoLoginFromTecnoShark();
         initializeVisitorCounter();
             // Load products from cloud first
