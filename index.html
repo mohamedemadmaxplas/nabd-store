@@ -2172,11 +2172,10 @@
             }
         ];
         
-        // ==================== FIREBASE CONFIGURATION ====================
        const firebaseConfig = {
   apiKey: "AIzaSyAs3U2941_rNArLPpCYjKM9yAVQtiK-oDw",
   authDomain: "nabd-store-1.firebaseapp.com",
-  databaseURL: "https://nabd-store-1-default-rtdb.firebaseio.com",
+  databaseURL: "https://nabd-store-1-default-rtdb.firebaseio.com",  // ❗ أضف هذا السطر
   projectId: "nabd-store-1",
   storageBucket: "nabd-store-1.firebasestorage.app",
   messagingSenderId: "132078192935",
@@ -2529,9 +2528,7 @@ function showToast(message, type = 'success') {
     toast.className = `toast-notification ${type} show`;
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
-       // ==================== معالجة التوكن القادم من Tecno Shark ====================
-function checkAutoLoginFromTecnoShark() {
-    // الحصول على التوكن من رابط الصفحة
+       function checkAutoLoginFromTecnoShark() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     
@@ -2541,27 +2538,22 @@ function checkAutoLoginFromTecnoShark() {
     }
     
     try {
-        // فك تشفير التوكن (Base64)
         const decodedToken = JSON.parse(atob(token));
         console.log('📦 تم استلام توكن:', decodedToken);
         
-        // التحقق من صلاحية التوكن (ساعة واحدة)
         if (decodedToken.expires && decodedToken.expires < Date.now()) {
             showToast('⚠️ انتهت صلاحية جلسة تسجيل الدخول', 'error');
             window.history.replaceState({}, document.title, window.location.pathname);
             return false;
         }
         
-        // التحقق من وجود بيانات المستخدم
         if (!decodedToken.uid || !decodedToken.username) {
             showToast('❌ بيانات التوكن غير مكتملة', 'error');
             window.history.replaceState({}, document.title, window.location.pathname);
             return false;
         }
         
-        // ✅ مهم جداً: تسجيل الدخول المباشر بدون Firebase Auth
-        // نستخدم التوكن مباشرة لإنشاء جلسة المستخدم
-        
+        // ✅ تسجيل الدخول المباشر بدون Firebase Auth
         currentUser = {
             uid: decodedToken.uid,
             name: decodedToken.name || decodedToken.username.split('@')[0],
@@ -2572,10 +2564,8 @@ function checkAutoLoginFromTecnoShark() {
             plan: decodedToken.plan || 'free'
         };
         
-        // حفظ في localStorage
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
-        // ⭐ إضافة المستخدم إلى users array المحلي إذا لم يكن موجوداً
         if (!users.find(u => u.uid === decodedToken.uid)) {
             users.push({
                 uid: decodedToken.uid,
@@ -2588,19 +2578,15 @@ function checkAutoLoginFromTecnoShark() {
             localStorage.setItem('users', JSON.stringify(users));
         }
         
-        // محاولة تحميل السلة والطلبات من Firebase Database (بدون Auth)
         loadUserDataFromDatabase(decodedToken.uid);
         
-        // تحديث الواجهة
         updateCartCount();
         updateAccountButton();
         
         showToast(`✅ مرحباً بك ${currentUser.name}`, 'success');
         
-        // إزالة التوكن من الرابط (تنظيف)
         window.history.replaceState({}, document.title, window.location.pathname);
         
-        // إذا كان المستخدم في صفحة تسجيل الدخول، ننقله للرئيسية
         const activeSection = document.querySelector('.section.active');
         if (activeSection && activeSection.id === 'login') {
             showSection('home');
@@ -2613,6 +2599,40 @@ function checkAutoLoginFromTecnoShark() {
         showToast('❌ حدث خطأ في معالجة تسجيل الدخول', 'error');
         window.history.replaceState({}, document.title, window.location.pathname);
         return false;
+    }
+}
+async function loadUserDataFromDatabase(uid) {
+    if (!uid) return;
+    
+    try {
+        const cartSnapshot = await database.ref(`users/${uid}/cart`).once('value');
+        const savedCart = cartSnapshot.val();
+        if (savedCart && Array.isArray(savedCart) && savedCart.length > 0) {
+            cart = savedCart;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        }
+        
+        const ordersSnapshot = await database.ref(`users/${uid}/orders`).once('value');
+        const savedOrders = ordersSnapshot.val();
+        if (savedOrders && Array.isArray(savedOrders) && savedOrders.length > 0) {
+            orders = savedOrders;
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+        
+        const profileSnapshot = await database.ref(`users/${uid}/profile`).once('value');
+        const profile = profileSnapshot.val();
+        if (profile) {
+            currentUser.name = profile.name || currentUser.name;
+            currentUser.phone = profile.phone || currentUser.phone;
+            currentUser.address = profile.address || currentUser.address;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+        
+        console.log('✅ تم تحميل بيانات المستخدم بنجاح');
+        
+    } catch (error) {
+        console.error('❌ خطأ في تحميل بيانات المستخدم:', error);
     }
 }
 
