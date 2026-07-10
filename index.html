@@ -3449,6 +3449,21 @@
         </div>
     </div>
 </div>
+<!-- حقل التصنيف -->
+<div class="form-group" style="margin-bottom: 1rem;">
+    <label style="display: block; font-weight: 600; color: #164E63; margin-bottom: 0.5rem;">
+        <i class="fas fa-tags"></i> التصنيف
+    </label>
+    <select id="product-category" required style="width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 0.95rem; font-family: 'Cairo', sans-serif; outline: none; transition: all 0.3s ease; background: #fff; color: #164E63;">
+        <option value="hoodies">👕 هوديز</option>
+        <option value="shirts">👕 تيشيرتات</option>
+        <option value="jackets">🧥 جواكيت</option>
+        <option value="sale">🏷️ عروض</option>
+    </select>
+    <small style="display: block; margin-top: 4px; color: #999; font-size: 0.75rem;">
+        <i class="fas fa-info-circle"></i> اختر التصنيف المناسب للمنتج
+    </small>
+</div>
                 </div>
                 <input type="number" placeholder="سعر التكلفة" id="product-cost" required>
                 <input type="number" placeholder="سعر البيع" id="product-price" required>
@@ -3512,6 +3527,21 @@
                     
                     <div id="edit-image-preview" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
                 </div>
+                <!-- حقل التصنيف للتعديل -->
+<div class="form-group" style="margin-bottom: 1rem;">
+    <label style="display: block; font-weight: 600; color: #164E63; margin-bottom: 0.5rem;">
+        <i class="fas fa-tags"></i> التصنيف
+    </label>
+    <select id="edit-product-category" style="width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 0.95rem; font-family: 'Cairo', sans-serif; outline: none; transition: all 0.3s ease; background: #fff; color: #164E63;">
+        <option value="hoodies">👕 هوديز</option>
+        <option value="shirts">👕 تيشيرتات</option>
+        <option value="jackets">🧥 جواكيت</option>
+        <option value="sale">🏷️ عروض</option>
+    </select>
+    <small style="display: block; margin-top: 4px; color: #999; font-size: 0.75rem;">
+        <i class="fas fa-info-circle"></i> اختر التصنيف المناسب للمنتج
+    </small>
+</div>
                 <input type="number" placeholder="سعر التكلفة" id="edit-cost" required>
                 <input type="number" placeholder="سعر البيع" id="edit-price" required>
                 <h4 style="font-size:0.9rem;">المقاسات</h4>
@@ -4004,7 +4034,9 @@ let currentSort = 'newest';
 let currentView = 'grid';
 let filteredProducts = [];
 
-// تصفية المنتجات حسب التصنيف
+// ============================================
+// 🎯 تصفية المنتجات حسب التصنيف
+// ============================================
 function filterProducts(category) {
     currentCategory = category;
     
@@ -4016,12 +4048,13 @@ function filterProducts(category) {
     applyFiltersAndSort();
 }
 
-// ترتيب المنتجات
+// ============================================
+// 📊 ترتيب المنتجات
+// ============================================
 function sortProducts(sortBy) {
     currentSort = sortBy;
     applyFiltersAndSort();
 }
-
 // تبديل العرض
 function setView(view) {
     currentView = view;
@@ -4036,17 +4069,19 @@ function setView(view) {
     });
 }
 
-// تطبيق الفلترة والترتيب
+// ============================================
+// 🔍 تطبيق الفلترة والترتيب
+// ============================================
 function applyFiltersAndSort() {
     let filtered = [...products];
     
-    // تطبيق التصنيف
+    // تطبيق التصنيف (إذا كان الكل يعرض الكل)
     if (currentCategory !== 'all') {
         if (currentCategory === 'sale') {
-            // منتجات عليها عروض (سعر مخفض)
+            // منتجات عليها عروض
             filtered = filtered.filter(p => p.discount && p.discount > 0);
         } else {
-            // تصفية حسب التصنيف (يمكن إضافة خاصية category لكل منتج)
+            // تصفية حسب التصنيف المحدد
             filtered = filtered.filter(p => p.category === currentCategory);
         }
     }
@@ -4103,11 +4138,11 @@ function updateProductCount(count) {
 }
 
 // ============================================
-// 🎴 بطاقة المنتج المحسنة
+// 🎴 بطاقة المنتج المحسنة مع التصنيف
 // ============================================
-
 function productCardEnhanced(p) {
     const carouselHtml = renderProductCarousel(p.images, p.id);
+    const categoryBadge = getCategoryBadge(p.category);
     
     // حساب نسبة المخزون
     let totalQty = 0;
@@ -4115,7 +4150,7 @@ function productCardEnhanced(p) {
     if (p.sizes) {
         for (let s in p.sizes) {
             totalQty += p.sizes[s].qty || 0;
-            maxQty += 10; // افتراض أن الحد الأقصى لكل مقاس 10
+            maxQty += 10;
         }
     }
     const stockPercentage = maxQty > 0 ? Math.min((totalQty / maxQty) * 100, 100) : 0;
@@ -4134,7 +4169,7 @@ function productCardEnhanced(p) {
         badgeHtml = `<span class="product-badge best">⭐ ${currentLang === 'ar' ? 'الأكثر مبيعاً' : 'Best Seller'}</span>`;
     }
     
-    // السعر الأصلي (إذا كان هناك خصم)
+    // السعر
     let priceHtml = `<span class="product-price">${p.price} ج.م</span>`;
     if (p.discount && p.discount > 0) {
         const originalPrice = Math.round(p.price / (1 - p.discount / 100));
@@ -4154,11 +4189,14 @@ function productCardEnhanced(p) {
                 </button>
             </div>
             <div class="product-info">
-                <h3 class="product-title">${p.name}</h3>
-                <div class="product-meta">
-                    <span><i class="fas fa-star"></i> ${p.rating || 4.5}</span>
-                    <span><i class="fas fa-shopping-bag"></i> ${p.sold || 0}</span>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                    <div class="product-category-badge">${categoryBadge}</div>
+                    <div class="product-meta">
+                        <span><i class="fas fa-star"></i> ${p.rating || 4.5}</span>
+                        <span><i class="fas fa-shopping-bag"></i> ${p.sold || 0}</span>
+                    </div>
                 </div>
+                <h3 class="product-title">${p.name}</h3>
                 ${priceHtml}
                 <div class="product-rating">
                     ${Array(5).fill().map((_, i) => `<i class="fas fa-star${i < Math.floor(p.rating || 4.5) ? '' : '-o'}"></i>`).join('')}
@@ -5866,6 +5904,46 @@ async function renderProfileWithOrders() {
         }
     }
 }
+// الحصول على اسم التصنيف بالعربية
+function getCategoryName(category) {
+    const categories = {
+        'hoodies': '👕 هوديز',
+        'shirts': '👕 تيشيرتات',
+        'jackets': '🧥 جواكيت',
+        'sale': '🏷️ عروض'
+    };
+    return categories[category] || category || 'غير مصنف';
+}
+
+// الحصول على لون التصنيف
+function getCategoryColor(category) {
+    const colors = {
+        'hoodies': '#3b82f6',
+        'shirts': '#22c55e',
+        'jackets': '#8b5cf6',
+        'sale': '#ef4444'
+    };
+    return colors[category] || '#6b7280';
+}
+
+// عرض شارة التصنيف
+function getCategoryBadge(category) {
+    const names = {
+        'hoodies': 'هوديز',
+        'shirts': 'تيشيرتات',
+        'jackets': 'جواكيت',
+        'sale': 'عروض'
+    };
+    const colors = {
+        'hoodies': '#3b82f6',
+        'shirts': '#22c55e',
+        'jackets': '#8b5cf6',
+        'sale': '#ef4444'
+    };
+    const displayName = names[category] || category || 'غير مصنف';
+    const color = colors[category] || '#6b7280';
+    return `<span style="background:${color}; color:#fff; padding:2px 12px; border-radius:20px; font-size:0.6rem; font-weight:700; letter-spacing:0.3px; display:inline-block;">${displayName}</span>`;
+}
 // ============================================
 // ✏️ تعديل الملف الشخصي
 // ============================================
@@ -6197,17 +6275,20 @@ function showSection(sectionId) {
             </div>`;
         }
         
-        function renderFeaturedProducts() {
-            const container = document.getElementById('featured-products');
-            if (!container) return;
-            if (!Array.isArray(products)) {
-                console.error('products is not an array:', products);
-                products = [];
-            }
-            const featured = products.slice(0, 4);
-            container.innerHTML = featured.map(p => productCard(p)).join('');
-            featured.forEach(p => attachCarouselListeners(`carousel-${p.id}`, p.images?.length || 1));
-        }
+     // ============================================
+// 🏠 عرض المنتجات المميزة (معدل)
+// ============================================
+function renderFeaturedProducts() {
+    const container = document.getElementById('featured-products');
+    if (!container) return;
+    if (!Array.isArray(products)) {
+        console.error('products is not an array:', products);
+        products = [];
+    }
+    const featured = products.slice(0, 4);
+    container.innerHTML = featured.map(p => productCardEnhanced(p)).join('');
+    featured.forEach(p => attachCarouselListeners(`carousel-${p.id}`, p.images?.length || 1));
+}
         
        // ============================================
 // 🔄 تعديل دالة renderAllProducts الأصلية
@@ -6216,6 +6297,13 @@ function showSection(sectionId) {
 // استبدل دالة renderAllProducts الحالية بهذه
 function renderAllProducts() {
     applyFiltersAndSort();
+}
+// ============================================
+// 🔙 الرجوع إلى صفحة الملف الشخصي
+// ============================================
+
+function goBackToProfile() {
+    showSection('profile');
 }
         
         function showFullProductDetail(productId) {
@@ -7147,30 +7235,34 @@ async function deleteOrder(orderNumberOrId) {
             win.print();
         }
         
-        // ==================== INVENTORY FUNCTIONS ====================
-        function renderInventory() {
-            let html = '<div class="inventory-form"><table><thead><tr><th>' + (currentLang === 'ar' ? 'ID' : 'ID') + '</th><th>' + (currentLang === 'ar' ? 'المنتج' : 'Product') + '</th><th>' + (currentLang === 'ar' ? 'سعر التكلفة' : 'Cost') + '</th><th>' + (currentLang === 'ar' ? 'سعر البيع' : 'Price') + '</th><th>' + (currentLang === 'ar' ? 'الربح' : 'Profit') + '</th><th>' + (currentLang === 'ar' ? 'المخزون' : 'Stock') + '</th><th>' + (currentLang === 'ar' ? 'إجراء' : 'Action') + '</th></tr></thead><tbody>';
-            if (Array.isArray(products)) {
-                products.forEach(p => {
-                    let totalQty = 0;
-                    if (p.sizes) {
-                        for (let s in p.sizes) totalQty += p.sizes[s].qty || 0;
-                    }
-                    html += `<tr>
-                        <td>${p.id}</td>
-                        <td>${p.name}</td>
-                        <td>${p.cost || 0}</td>
-                        <td>${p.price || 0}</td>
-                        <td>${(p.price || 0) - (p.cost || 0)}</td>
-                        <td>${totalQty}</td>
-                        <td><button class="action-btn" onclick="editProduct(${p.id})">${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button><button class="action-btn delete-btn" onclick="deleteProduct(${p.id})">${currentLang === 'ar' ? 'حذف' : 'Delete'}</button><button class="action-btn restock-btn" onclick="showRestockPopup(${p.id})">${currentLang === 'ar' ? 'إعادة تخزين' : 'Restock'}</button></td>
-                    </tr>`;
-                });
+       // ============================================
+// 📦 عرض المخزون مع التصنيف
+// ============================================
+function renderInventory() {
+    let html = '<div class="inventory-form"><table><thead><tr><th>' + (currentLang === 'ar' ? 'ID' : 'ID') + '</th><th>' + (currentLang === 'ar' ? 'المنتج' : 'Product') + '</th><th>' + (currentLang === 'ar' ? 'التصنيف' : 'Category') + '</th><th>' + (currentLang === 'ar' ? 'سعر التكلفة' : 'Cost') + '</th><th>' + (currentLang === 'ar' ? 'سعر البيع' : 'Price') + '</th><th>' + (currentLang === 'ar' ? 'الربح' : 'Profit') + '</th><th>' + (currentLang === 'ar' ? 'المخزون' : 'Stock') + '</th><th>' + (currentLang === 'ar' ? 'إجراء' : 'Action') + '</th></tr></thead><tbody>';
+    if (Array.isArray(products)) {
+        products.forEach(p => {
+            let totalQty = 0;
+            if (p.sizes) {
+                for (let s in p.sizes) totalQty += p.sizes[s].qty || 0;
             }
-            html += '</tbody></table></div>';
-            const productList = document.getElementById('product-list');
-            if (productList) productList.innerHTML = html;
-        }
+            const categoryName = getCategoryName(p.category);
+            html += `<tr>
+                <td>${p.id}</td>
+                <td>${p.name}</td>
+                <td>${categoryName}</td>
+                <td>${p.cost || 0}</td>
+                <td>${p.price || 0}</td>
+                <td>${(p.price || 0) - (p.cost || 0)}</td>
+                <td>${totalQty}</td>
+                <td><button class="action-btn" onclick="editProduct(${p.id})">${currentLang === 'ar' ? 'تعديل' : 'Edit'}</button><button class="action-btn delete-btn" onclick="deleteProduct(${p.id})">${currentLang === 'ar' ? 'حذف' : 'Delete'}</button><button class="action-btn restock-btn" onclick="showRestockPopup(${p.id})">${currentLang === 'ar' ? 'إعادة تخزين' : 'Restock'}</button></td>
+            </tr>`;
+        });
+    }
+    html += '</tbody></table></div>';
+    const productList = document.getElementById('product-list');
+    if (productList) productList.innerHTML = html;
+}
         
         function showRestockPopup(productId) {
             currentRestockProduct = products.find(p => p.id === productId);
@@ -7267,44 +7359,57 @@ async function deleteOrder(orderNumberOrId) {
             }
         }
         
-        function editProduct(id) {
-            const p = products.find(p => p.id === id);
-            if (!p) return;
-            const idInput = document.getElementById('edit-product-id');
-            const nameInput = document.getElementById('edit-name');
-            const descInput = document.getElementById('edit-desc');
-            const costInput = document.getElementById('edit-cost');
-            const priceInput = document.getElementById('edit-price');
-            if (idInput) idInput.value = p.id;
-            if (nameInput) nameInput.value = p.name;
-            if (descInput) descInput.value = p.description || '';
-            if (costInput) costInput.value = p.cost || 0;
-            if (priceInput) priceInput.value = p.price || 0;
-            
-            const sizeInputs = ['s', 'm', 'l', 'xl', 'xxl'];
-            sizeInputs.forEach(s => {
-                const qtyInput = document.getElementById(`edit-size-${s}-qty`);
-                const priceField = document.getElementById(`edit-size-${s}-price`);
-                if (qtyInput) qtyInput.value = p.sizes?.[s.toUpperCase()]?.qty || 0;
-                if (priceField) priceField.value = p.sizes?.[s.toUpperCase()]?.price || p.price || 0;
-            });
-            
-            const colorsContainer = document.getElementById('edit-colors-container');
-            if (colorsContainer) {
-                colorsContainer.innerHTML = '';
-                let idx = 1;
-                if (p.colors) {
-                    for (let color in p.colors) {
-                        const div = document.createElement('div');
-                        div.className = 'size-row';
-                        div.innerHTML = `<input type="text" placeholder="${currentLang === 'ar' ? 'اللون' : 'Color'}" value="${color}" id="edit-color-name-${idx}"><input type="number" placeholder="${currentLang === 'ar' ? 'عدد القطع' : 'Quantity'}" value="${p.colors[color]}" id="edit-color-qty-${idx}">`;
-                        colorsContainer.appendChild(div);
-                        idx++;
-                    }
-                }
+       // ============================================
+// 📝 فتح نافذة تعديل المنتج (معدلة)
+// ============================================
+function editProduct(id) {
+    const p = products.find(p => p.id === id);
+    if (!p) return;
+    
+    const idInput = document.getElementById('edit-product-id');
+    const nameInput = document.getElementById('edit-name');
+    const descInput = document.getElementById('edit-desc');
+    const costInput = document.getElementById('edit-cost');
+    const priceInput = document.getElementById('edit-price');
+    
+    if (idInput) idInput.value = p.id;
+    if (nameInput) nameInput.value = p.name;
+    if (descInput) descInput.value = p.description || '';
+    if (costInput) costInput.value = p.cost || 0;
+    if (priceInput) priceInput.value = p.price || 0;
+    
+    // ✅ تعيين قيمة التصنيف
+    const categorySelect = document.getElementById('edit-product-category');
+    if (categorySelect && p.category) {
+        categorySelect.value = p.category;
+    } else if (categorySelect) {
+        categorySelect.value = 'hoodies';
+    }
+    
+    const sizeInputs = ['s', 'm', 'l', 'xl', 'xxl'];
+    sizeInputs.forEach(s => {
+        const qtyInput = document.getElementById(`edit-size-${s}-qty`);
+        const priceField = document.getElementById(`edit-size-${s}-price`);
+        if (qtyInput) qtyInput.value = p.sizes?.[s.toUpperCase()]?.qty || 0;
+        if (priceField) priceField.value = p.sizes?.[s.toUpperCase()]?.price || p.price || 0;
+    });
+    
+    const colorsContainer = document.getElementById('edit-colors-container');
+    if (colorsContainer) {
+        colorsContainer.innerHTML = '';
+        let idx = 1;
+        if (p.colors) {
+            for (let color in p.colors) {
+                const div = document.createElement('div');
+                div.className = 'size-row';
+                div.innerHTML = `<input type="text" placeholder="${currentLang === 'ar' ? 'اللون' : 'Color'}" value="${color}" id="edit-color-name-${idx}"><input type="number" placeholder="${currentLang === 'ar' ? 'عدد القطع' : 'Quantity'}" value="${p.colors[color]}" id="edit-color-qty-${idx}">`;
+                colorsContainer.appendChild(div);
+                idx++;
             }
-            document.getElementById('edit-product-modal')?.classList.add('show');
         }
+    }
+    document.getElementById('edit-product-modal')?.classList.add('show');
+}
         
               function addEditColorField() {
     const container = document.getElementById('edit-colors-container');
@@ -7888,7 +7993,9 @@ function removeEditImage(buttonElement, imageUrl) {
     }
 }
         
-// ==================== إضافة منتج جديد (معدل - استخدام getAllProductImages المعدلة) ====================
+// ============================================
+// ➕ إضافة منتج جديد (معدلة مع التصنيف)
+// ============================================
 const addProductForm = document.getElementById('add-product-form');
 if (addProductForm) {
     addProductForm.addEventListener('submit', async function(e) {
@@ -7898,6 +8005,7 @@ if (addProductForm) {
         
         const name = document.getElementById('product-name')?.value?.trim() || '';
         const desc = document.getElementById('product-desc')?.value?.trim() || '';
+        const category = document.getElementById('product-category')?.value || 'hoodies';
         const cost = parseFloat(document.getElementById('product-cost')?.value) || 0;
         const price = parseFloat(document.getElementById('product-price')?.value) || 0;
         
@@ -7911,7 +8019,7 @@ if (addProductForm) {
             return;
         }
         
-        // استخدام الدالة المعدلة لمعالجة الصور (بما فيها روابط فيسبوك)
+        // استخدام الدالة المعدلة لمعالجة الصور
         let images = await getAllProductImages();
         
         // جمع المقاسات
@@ -7950,11 +8058,13 @@ if (addProductForm) {
             id: newProductId, 
             name, 
             description: desc, 
-            images: images,  // الصور بعد معالجة الروابط
+            category: category,  // ← التصنيف المضاف
+            images: images,
             cost, 
             price, 
             sizes, 
             colors,
+            discount: category === 'sale' ? 20 : 0,  // خصم تلقائي للعروض
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
@@ -7995,7 +8105,9 @@ if (addProductForm) {
     });
 }
         
-       // جزء معدل من حدث // جزء معدل من حدث editProductForm
+       // ============================================
+// ✏️ تعديل المنتج (معدل مع التصنيف)
+// ============================================
 const editProductForm = document.getElementById('edit-product-form');
 if (editProductForm) {
     editProductForm.addEventListener('submit', async function(e) {
@@ -8014,8 +8126,16 @@ if (editProductForm) {
         // تحديث البيانات الأساسية
         product.name = document.getElementById('edit-name')?.value || '';
         product.description = document.getElementById('edit-desc')?.value || '';
+        product.category = document.getElementById('edit-product-category')?.value || 'hoodies';  // ← التصنيف المضاف
         product.cost = parseFloat(document.getElementById('edit-cost')?.value) || 0;
         product.price = parseFloat(document.getElementById('edit-price')?.value) || 0;
+        
+        // تحديث الخصم تلقائياً إذا كان التصنيف "عروض"
+        if (product.category === 'sale') {
+            product.discount = product.discount || 20;
+        } else {
+            product.discount = 0;
+        }
         
         // تحديث المقاسات
         product.sizes = {};
@@ -8040,7 +8160,7 @@ if (editProductForm) {
             }
         }
         
-        // إضافة الصور الجديدة (إن وجدت)
+        // إضافة الصور الجديدة
         if (editUploadedImages && editUploadedImages.length > 0) {
             if (!product.images) product.images = [];
             product.images.push(...editUploadedImages);
@@ -8050,19 +8170,14 @@ if (editProductForm) {
         product.updatedAt = new Date().toISOString();
         
         try {
-            // حفظ في localStorage
             localStorage.setItem('products', JSON.stringify(products));
-            
-            // حفظ في Firebase Cloud
             await saveProductsToCloud(products);
             
             showToast(`✅ تم تحديث المنتج "${product.name}" بنجاح`, 'success');
             
-            // تنظيف
             editUploadedImages = [];
             closeEditModal();
             
-            // إعادة تحميل العروض
             renderInventory();
             renderAllProducts();
             renderFeaturedProducts();
@@ -8073,7 +8188,6 @@ if (editProductForm) {
         }
     });
 }
-
    async function renderReports() {
     console.log('📊 بدء تحميل التقارير...');
     
