@@ -3771,6 +3771,33 @@
         font-size: 2rem;
     }
 }
+/* ============================================
+   👤 صورة المستخدم
+   ============================================ */
+
+.user-avatar-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid #E5C97B;
+    box-shadow: 0 0 0 2px #E5C97B;
+    transition: all 0.3s ease;
+}
+
+.user-avatar-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px #E5C97B;
+}
+
+/* صورة الأفاتار في صفحة الملف الشخصي */
+.profile-avatar-modern img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
     </style>
 </head>
 <body>
@@ -5515,7 +5542,9 @@ function showToast(message, type = 'success') {
             email: decodedToken.email || `${decodedToken.username.split('@')[0]}@tecno.com`,
             username: decodedToken.username,
             address: decodedToken.address || '',
-            plan: decodedToken.plan || 'free'
+            plan: decodedToken.plan || 'free',
+                photoURL: decodedToken.photoURL || null  // ← إضافة صورة المستخدم
+
         };
         
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -7135,109 +7164,117 @@ async function compressImage(file, maxWidth = 1200, maxHeight = 1200) {
 }
         
         
-        async function handleGoogleLogin(response) {
-            try {
-                const credential = response.credential;
-                const result = await auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(credential));
-                const user = result.user;
-                currentFirebaseUser = user;
-                
-                // Check if user profile exists in database
-                const profile = await loadUserProfile(user.uid);
-                
-                if (profile && profile.phone) {
-                    // User already has profile data
-                    currentUser = {
-                        uid: user.uid,
-                        name: profile.name || user.displayName,
-                        phone: profile.phone,
-                        email: user.email,
-                        address: profile.address || '',
-                        username: profile.username
-                    };
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
-                    cart = await loadUserCart(user.uid);
-                    orders = await loadUserOrders(user.uid);
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    localStorage.setItem('orders', JSON.stringify(orders));
-                    
-                    updateCartCount();
-                    updateAccountButton();
-                    showToast(`مرحباً بك ${currentUser.name}`, 'success');
-                    showSection('home');
-                } else {
-                    // New user - show data collection popup
-                    pendingGoogleUser = {
-                        uid: user.uid,
-                        name: user.displayName,
-                        email: user.email
-                    };
-                    document.getElementById('google-user-name').innerText = user.displayName || user.email;
-                    document.getElementById('google-data-popup').classList.add('show');
-                }
-            } catch (error) {
-                console.error('Google login error:', error);
-                showToast('حدث خطأ في تسجيل الدخول بجوجل', 'error');
-            }
+      async function handleGoogleLogin(response) {
+    try {
+        const credential = response.credential;
+        const result = await auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(credential));
+        const user = result.user;
+        currentFirebaseUser = user;
+        
+        // تخزين صورة المستخدم
+        const photoURL = user.photoURL || null;
+        
+        // Check if user profile exists in database
+        const profile = await loadUserProfile(user.uid);
+        
+        if (profile && profile.phone) {
+            // User already has profile data
+            currentUser = {
+                uid: user.uid,
+                name: profile.name || user.displayName,
+                phone: profile.phone,
+                email: user.email,
+                address: profile.address || '',
+                username: profile.username,
+                photoURL: photoURL  // ← إضافة صورة المستخدم
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            cart = await loadUserCart(user.uid);
+            orders = await loadUserOrders(user.uid);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('orders', JSON.stringify(orders));
+            
+            updateCartCount();
+            updateAccountButton();
+            showToast(`مرحباً بك ${currentUser.name}`, 'success');
+            showSection('home');
+        } else {
+            // New user - show data collection popup
+            pendingGoogleUser = {
+                uid: user.uid,
+                name: user.displayName,
+                email: user.email,
+                photoURL: photoURL  // ← إضافة صورة المستخدم
+            };
+            document.getElementById('google-user-name').innerText = user.displayName || user.email;
+            document.getElementById('google-data-popup').classList.add('show');
+        }
+    } catch (error) {
+        console.error('Google login error:', error);
+        showToast('حدث خطأ في تسجيل الدخول بجوجل', 'error');
+    }
+}
+        
+       async function completeGoogleUserData() {
+    const phone = document.getElementById('google-phone')?.value || '';
+    const address = document.getElementById('google-address')?.value || '';
+    
+    if (!phone) {
+        showToast('يرجى إدخال رقم الهاتف', 'error');
+        return;
+    }
+    
+    if (pendingGoogleUser) {
+        const userData = {
+            name: pendingGoogleUser.name,
+            phone: phone,
+            email: pendingGoogleUser.email,
+            address: address,
+            username: pendingGoogleUser.email.split('@')[0],
+            photoURL: pendingGoogleUser.photoURL || null,  // ← إضافة صورة المستخدم
+            createdAt: new Date().toISOString()
+        };
+        
+        await saveUserProfile(pendingGoogleUser.uid, userData);
+        
+        // Save to local users array
+        if (!users.find(u => u.email === pendingGoogleUser.email)) {
+            users.push({
+                name: pendingGoogleUser.name,
+                phone: phone,
+                email: pendingGoogleUser.email,
+                username: pendingGoogleUser.email.split('@')[0],
+                photoURL: pendingGoogleUser.photoURL || null  // ← إضافة صورة المستخدم
+            });
+            localStorage.setItem('users', JSON.stringify(users));
         }
         
-        async function completeGoogleUserData() {
-            const phone = document.getElementById('google-phone')?.value || '';
-            const address = document.getElementById('google-address')?.value || '';
-            
-            if (!phone) {
-                showToast('يرجى إدخال رقم الهاتف', 'error');
-                return;
-            }
-            
-            if (pendingGoogleUser) {
-                const userData = {
-                    name: pendingGoogleUser.name,
-                    phone: phone,
-                    email: pendingGoogleUser.email,
-                    address: address,
-                    username: pendingGoogleUser.email.split('@')[0],
-                    createdAt: new Date().toISOString()
-                };
-                
-                await saveUserProfile(pendingGoogleUser.uid, userData);
-                
-                // Save to local users array
-                if (!users.find(u => u.email === pendingGoogleUser.email)) {
-                    users.push({
-                        name: pendingGoogleUser.name,
-                        phone: phone,
-                        email: pendingGoogleUser.email,
-                        username: pendingGoogleUser.email.split('@')[0]
-                    });
-                    localStorage.setItem('users', JSON.stringify(users));
-                }
-                
-                currentUser = {
-                    uid: pendingGoogleUser.uid,
-                    name: pendingGoogleUser.name,
-                    phone: phone,
-                    email: pendingGoogleUser.email,
-                    address: address,
-                    username: pendingGoogleUser.email.split('@')[0]
-                };
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                cart = await loadUserCart(pendingGoogleUser.uid);
-                orders = await loadUserOrders(pendingGoogleUser.uid);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                localStorage.setItem('orders', JSON.stringify(orders));
-                
-                updateCartCount();
-                updateAccountButton();
-                closeGoogleDataPopup();
-                showToast(`مرحباً بك ${currentUser.name}`, 'success');
-                showSection('home');
-                renderCart();
-                renderProfileWithOrders();
-            }
-        }
+        currentUser = {
+            uid: pendingGoogleUser.uid,
+            name: pendingGoogleUser.name,
+            phone: phone,
+            email: pendingGoogleUser.email,
+            address: address,
+            username: pendingGoogleUser.email.split('@')[0],
+            photoURL: pendingGoogleUser.photoURL || null  // ← إضافة صورة المستخدم
+        };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        
+        cart = await loadUserCart(pendingGoogleUser.uid);
+        orders = await loadUserOrders(pendingGoogleUser.uid);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        localStorage.setItem('orders', JSON.stringify(orders));
+        
+        updateCartCount();
+        updateAccountButton();
+        closeGoogleDataPopup();
+        showToast(`مرحباً بك ${currentUser.name}`, 'success');
+        showSection('home');
+        renderCart();
+        renderProfileWithOrders();
+    }
+}
         // ============================================
 // 👤 عرض الملف الشخصي - النسخة المحسنة
 // ============================================
@@ -7260,10 +7297,13 @@ async function renderProfileWithOrders() {
             profileInfo.innerHTML = `
                 <div class="profile-card-modern">
                     <div class="profile-header">
-                        <div class="profile-avatar-modern">
-                            ${initials}
-                            <span class="online-dot"></span>
-                        </div>
+                       <div class="profile-avatar-modern" style="overflow:hidden; padding:0;">
+    ${currentUser.photoURL ? 
+        `<img src="${currentUser.photoURL}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="${currentUser.name}">` : 
+        initials
+    }
+    <span class="online-dot"></span>
+</div>
                         <div class="profile-name-section">
                             <h2>${currentUser.name || 'مستخدم'}</h2>
                             <div class="profile-username">
@@ -7651,15 +7691,32 @@ async function sendStatusUpdateToCustomer(customerPhone, orderNumber, newStatus,
 }
         
         function updateAccountButton() {
-            const container = document.getElementById('account-btn-container');
-            if (!container) return;
-            if (currentUser) {
-                const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
-           container.innerHTML = `<div class="user-avatar" onclick="showSection('profile'); return false;">${initial}</div>`;
-            } else {
-                container.innerHTML = `<button class="google-login-btn" onclick="showSection('login')"><i class="fab fa-google"></i><span> تسجيل الدخول</span></button>`;
-            }
+    const container = document.getElementById('account-btn-container');
+    if (!container) return;
+    
+    if (currentUser) {
+        // التحقق إذا كان المستخدم لديه صورة من Google
+        const photoURL = currentUser.photoURL || null;
+        const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
+        
+        if (photoURL) {
+            // عرض صورة المستخدم من Google
+            container.innerHTML = `
+                <img src="${photoURL}" 
+                     class="user-avatar-img" 
+                     onclick="showSection('profile'); return false;"
+                     alt="${currentUser.name || 'User'}"
+                     style="width:38px; height:38px; border-radius:50%; object-fit:cover; cursor:pointer; border:2px solid #E5C97B; box-shadow:0 0 0 2px #E5C97B; transition:0.3s;"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'user-avatar\\' onclick=\\'showSection(\\'profile\\'); return false;\\'>${initial}</div>';">
+            `;
+        } else {
+            // عرض الأحرف الأولى كالمعتاد
+            container.innerHTML = `<div class="user-avatar" onclick="showSection('profile'); return false;">${initial}</div>`;
         }
+    } else {
+        container.innerHTML = `<button class="google-login-btn" onclick="showSection('login')"><i class="fab fa-google"></i><span> تسجيل الدخول</span></button>`;
+    }
+}
         
         // ==================== POPUP CONTROLS ====================
         function showCustomLoginPopup() { document.getElementById('custom-login-popup')?.classList.add('show'); }
