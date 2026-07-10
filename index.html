@@ -2894,6 +2894,883 @@
 .product-card .stock-bar .stock-fill.low {
     background: #ef4444;
 }
+/* ============================================
+   👤 نافذة تعديل الملف الشخصي
+   ============================================ */
+
+/* النافذة المنبثقة */
+.profile-edit-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    padding: 1rem;
+}
+
+.profile-edit-popup.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* محتوى النافذة */
+.profile-edit-popup .popup-content {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: popupZoom 0.3s ease;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+@keyframes popupZoom {
+    from {
+        transform: scale(0.9) translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* رأس النافذة */
+.profile-edit-popup .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.profile-edit-popup .popup-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #164E63;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-edit-popup .popup-header h3 i {
+    color: #E5C97B;
+}
+
+.profile-edit-popup .popup-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: #f0f0f0;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-edit-popup .popup-close:hover {
+    background: #fee2e2;
+    color: #dc2626;
+    transform: rotate(90deg);
+}
+
+/* حقول الإدخال */
+.profile-edit-popup .form-group {
+    margin-bottom: 1.2rem;
+}
+
+.profile-edit-popup .form-group label {
+    display: block;
+    font-weight: 600;
+    color: #164E63;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.profile-edit-popup .form-group label i {
+    color: #E5C97B;
+    margin-left: 6px;
+    width: 20px;
+}
+
+.profile-edit-popup .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    color: #164E63;
+    outline: none;
+}
+
+.profile-edit-popup .form-group input:focus {
+    border-color: #E5C97B;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(229, 201, 123, 0.15);
+}
+
+.profile-edit-popup .form-group input:disabled {
+    background: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* الأزرار */
+.profile-edit-popup .popup-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid #f0f0f0;
+}
+
+.profile-edit-popup .popup-actions .btn-save {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #E5C97B, #c9a646);
+    color: #164E63;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.profile-edit-popup .popup-actions .btn-save:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(229, 201, 123, 0.4);
+}
+
+.profile-edit-popup .popup-actions .btn-cancel {
+    padding: 12px 24px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: transparent;
+    color: #666;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile-edit-popup .popup-actions .btn-cancel:hover {
+    background: #f0f0f0;
+    border-color: #ccc;
+}
+
+/* رسائل الخطأ */
+.profile-edit-popup .error-message {
+    color: #dc2626;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: none;
+}
+
+.profile-edit-popup .error-message.show {
+    display: block;
+}
+
+/* تجاوب */
+@media (max-width: 480px) {
+    .profile-edit-popup .popup-content {
+        padding: 1.2rem;
+    }
+    
+    .profile-edit-popup .popup-actions {
+        flex-direction: column;
+    }
+    
+    .profile-edit-popup .popup-actions .btn-cancel {
+        width: 100%;
+        justify-content: center;
+    }
+}
+/* ============================================
+   📄 صفحة تفاصيل المنتج - Product Detail
+   ============================================ */
+
+/* الحاوية الرئيسية */
+.product-detail-full-page {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(229, 201, 123, 0.1);
+    animation: fadeInUp 0.5s ease;
+}
+
+/* شبكة التفاصيل */
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+/* معرض الصور */
+.detail-gallery {
+    position: relative;
+}
+
+.detail-gallery .main-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background: #f8f9fa;
+    transition: transform 0.3s ease;
+}
+
+.detail-gallery .main-image:hover {
+    transform: scale(1.01);
+}
+
+.detail-gallery .thumbnail-list {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.detail-gallery .thumbnail-list img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.detail-gallery .thumbnail-list img:hover {
+    border-color: #E5C97B;
+    transform: scale(1.05);
+}
+
+.detail-gallery .thumbnail-list img.active {
+    border-color: #E5C97B;
+    box-shadow: 0 0 0 3px rgba(229, 201, 123, 0.3);
+}
+
+/* معلومات المنتج */
+.detail-info h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #164E63;
+    margin-bottom: 0.3rem;
+}
+
+.detail-info .detail-category {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.8rem;
+}
+
+.detail-info .detail-description {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.detail-info .detail-price-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.detail-info .detail-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #E5C97B;
+}
+
+.detail-info .detail-price .original {
+    font-size: 1rem;
+    text-decoration: line-through;
+    color: #999;
+    font-weight: 400;
+    margin-right: 10px;
+}
+
+.detail-info .detail-price .discount-badge {
+    background: #ef4444;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* التقييم */
+.detail-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    padding: 0.8rem 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.detail-rating .stars {
+    color: #f59e0b;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+}
+
+.detail-rating .rating-text {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.detail-rating .rating-text strong {
+    color: #164E63;
+}
+
+/* خيارات المقاس واللون */
+.detail-options {
+    margin: 1.5rem 0;
+}
+
+.detail-options .option-group {
+    margin-bottom: 1rem;
+}
+
+.detail-options .option-group label {
+    display: block;
+    font-weight: 600;
+    color: #164E63;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.detail-options .option-group label i {
+    color: #E5C97B;
+    margin-left: 5px;
+}
+
+.detail-options .size-options,
+.detail-options .color-options {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.detail-options .size-btn,
+.detail-options .color-btn {
+    padding: 8px 18px;
+    border: 2px solid #e5e7eb;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+}
+
+.detail-options .size-btn:hover,
+.detail-options .color-btn:hover {
+    border-color: #E5C97B;
+    transform: translateY(-2px);
+}
+
+.detail-options .size-btn.selected,
+.detail-options .color-btn.selected {
+    background: linear-gradient(135deg, #E5C97B, #c9a646);
+    color: #164E63;
+    border-color: #E5C97B;
+    box-shadow: 0 4px 15px rgba(229, 201, 123, 0.3);
+}
+
+.detail-options .size-btn:disabled,
+.detail-options .color-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    text-decoration: line-through;
+}
+
+/* الكمية */
+.detail-quantity {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.detail-quantity label {
+    font-weight: 600;
+    color: #164E63;
+    font-size: 0.9rem;
+}
+
+.detail-quantity .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f0f0f0;
+    border-radius: 12px;
+    padding: 4px;
+}
+
+.detail-quantity .qty-control button {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #164E63;
+}
+
+.detail-quantity .qty-control button:hover {
+    background: #E5C97B;
+    color: #fff;
+}
+
+.detail-quantity .qty-control input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #164E63;
+}
+
+/* أزرار الإجراءات */
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.detail-actions .btn-add-cart {
+    flex: 1;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #E5C97B, #c9a646);
+    color: #164E63;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.detail-actions .btn-add-cart:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(229, 201, 123, 0.4);
+}
+
+.detail-actions .btn-wishlist {
+    padding: 14px 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: transparent;
+    color: #666;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.detail-actions .btn-wishlist:hover {
+    border-color: #E5C97B;
+    color: #E5C97B;
+    transform: translateY(-3px);
+}
+
+.detail-actions .btn-wishlist.active {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+/* ============================================
+   ⭐ قسم التقييمات والتعليقات
+   ============================================ */
+
+.reviews-section {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid #f0f0f0;
+}
+
+.reviews-section .reviews-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.reviews-section .reviews-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #164E63;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.reviews-section .reviews-header h3 i {
+    color: #E5C97B;
+}
+
+/* ملخص التقييمات */
+.rating-summary {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: #f8f9fa;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.rating-summary .avg-rating {
+    text-align: center;
+}
+
+.rating-summary .avg-rating .number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #164E63;
+}
+
+.rating-summary .avg-rating .stars {
+    color: #f59e0b;
+    font-size: 1.1rem;
+}
+
+.rating-summary .avg-rating .count {
+    color: #999;
+    font-size: 0.8rem;
+}
+
+.rating-summary .rating-bars {
+    flex: 1;
+    min-width: 150px;
+}
+
+.rating-summary .rating-bars .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.rating-summary .rating-bars .bar-row .bar-track {
+    flex: 1;
+    height: 5px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.rating-summary .rating-bars .bar-row .bar-track .bar-fill {
+    height: 100%;
+    background: #f59e0b;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+}
+
+/* نموذج إضافة تعليق */
+.add-review-form {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.add-review-form h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #164E63;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-review-form h4 i {
+    color: #E5C97B;
+}
+
+.add-review-form .rating-input {
+    display: flex;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+    direction: ltr;
+}
+
+.add-review-form .rating-input .star-btn {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.add-review-form .rating-input .star-btn:hover,
+.add-review-form .rating-input .star-btn.active {
+    color: #f59e0b;
+    transform: scale(1.1);
+}
+
+.add-review-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    resize: vertical;
+    min-height: 80px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.add-review-form textarea:focus {
+    border-color: #E5C97B;
+    box-shadow: 0 0 0 3px rgba(229, 201, 123, 0.15);
+    outline: none;
+}
+
+.add-review-form .review-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.add-review-form .review-actions .btn-submit-review {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #E5C97B, #c9a646);
+    color: #164E63;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-review-form .review-actions .btn-submit-review:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(229, 201, 123, 0.3);
+}
+
+/* قائمة التعليقات */
+.reviews-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.review-item {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.3s ease;
+}
+
+.review-item:hover {
+    border-color: #E5C97B;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.review-item .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.review-item .reviewer-name {
+    font-weight: 700;
+    color: #164E63;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.review-item .reviewer-name .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E5C97B, #c9a646);
+    color: #164E63;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.review-item .review-stars {
+    color: #f59e0b;
+    font-size: 0.85rem;
+}
+
+.review-item .review-date {
+    color: #999;
+    font-size: 0.7rem;
+}
+
+.review-item .review-text {
+    color: #555;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-top: 0.3rem;
+}
+
+.review-item .review-actions-small {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.review-item .review-actions-small button {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.review-item .review-actions-small button:hover {
+    color: #E5C97B;
+}
+
+/* حالة عدم وجود تعليقات */
+.no-reviews {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+}
+
+.no-reviews i {
+    font-size: 2.5rem;
+    color: #ddd;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* ============================================
+   📱 التجاوب للشاشات الصغيرة
+   ============================================ */
+
+@media (max-width: 768px) {
+    .product-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .detail-gallery .main-image {
+        height: 280px;
+    }
+    
+    .detail-info h2 {
+        font-size: 1.3rem;
+    }
+    
+    .detail-info .detail-price {
+        font-size: 1.6rem;
+    }
+    
+    .rating-summary {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .detail-actions {
+        flex-direction: column;
+    }
+    
+    .detail-actions .btn-add-cart {
+        width: 100%;
+    }
+    
+    .review-item {
+        padding: 1rem;
+    }
+    
+    .add-review-form {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-gallery .main-image {
+        height: 220px;
+    }
+    
+    .detail-gallery .thumbnail-list img {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .detail-options .size-btn,
+    .detail-options .color-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .rating-summary .avg-rating .number {
+        font-size: 2rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -3222,10 +4099,11 @@
 </section>
     
     <section id="product-detail-full-page" class="section">
-        <button class="btn" onclick="goBackToProducts(); return false;" style="width: auto; margin-bottom: 0.8rem;"><i class="fas fa-arrow-right"></i> رجوع للمنتجات</button>
-        <div id="product-detail-full-content"></div>
-    </section>
-    
+    <button class="btn" onclick="goBackToProducts(); return false;" style="width: auto; margin-bottom: 0.8rem; display: inline-flex; align-items: center; gap: 8px;">
+        <i class="fas fa-arrow-right"></i> رجوع للمنتجات
+    </button>
+    <div id="product-detail-full-content"></div>
+</section>
     <section id="cart" class="section">
         <h2 style="font-size: 1.3rem;">سلة التسوق</h2>
         <div id="cart-container" class="cart-container"></div>
@@ -3569,7 +4447,63 @@
         </div>
         <div class="footer-bottom"><p>© 2026 نبض - جميع الحقوق محفوظة</p></div>
     </footer>
-    
+    <!-- ============================================
+     👤 نافذة تعديل الملف الشخصي
+     ============================================ -->
+<div class="profile-edit-popup" id="profile-edit-popup">
+    <div class="popup-content">
+        <!-- رأس النافذة -->
+        <div class="popup-header">
+            <h3>
+                <i class="fas fa-user-edit"></i>
+                <span id="edit-profile-title">تعديل الملف الشخصي</span>
+            </h3>
+            <button class="popup-close" onclick="closeProfileEditPopup()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- محتوى النافذة -->
+        <form id="profile-edit-form" onsubmit="saveProfileEdit(event)">
+            <!-- الاسم -->
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                <input type="text" id="edit-profile-name" placeholder="أدخل اسمك الكامل" required>
+                <div class="error-message" id="edit-name-error">الرجاء إدخال الاسم</div>
+            </div>
+            
+            <!-- رقم الهاتف -->
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                <input type="tel" id="edit-profile-phone" placeholder="أدخل رقم الهاتف" required>
+                <div class="error-message" id="edit-phone-error">الرجاء إدخال رقم الهاتف</div>
+            </div>
+            
+            <!-- البريد الإلكتروني (للقراءة فقط) -->
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                <input type="email" id="edit-profile-email" disabled>
+            </div>
+            
+            <!-- العنوان -->
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> العنوان</label>
+                <input type="text" id="edit-profile-address" placeholder="أدخل عنوانك">
+            </div>
+            
+            <!-- الأزرار -->
+            <div class="popup-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i>
+                    حفظ التعديلات
+                </button>
+                <button type="button" class="btn-cancel" onclick="closeProfileEditPopup()">
+                    إلغاء
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
     <script>
         // ==================== DATA & GLOBALS ====================
         let currentLang = 'ar';
@@ -4213,6 +5147,113 @@ function productCardEnhanced(p) {
         </div>
     `;
 }
+// ============================================
+// 👤 دوال نافذة تعديل الملف الشخصي
+// ============================================
+
+// فتح نافذة التعديل
+function openProfileEditPopup() {
+    if (!currentUser) {
+        showToast('الرجاء تسجيل الدخول أولاً', 'error');
+        return;
+    }
+    
+    // ملء الحقول بالبيانات الحالية
+    document.getElementById('edit-profile-name').value = currentUser.name || '';
+    document.getElementById('edit-profile-phone').value = currentUser.phone || '';
+    document.getElementById('edit-profile-email').value = currentUser.email || '';
+    document.getElementById('edit-profile-address').value = currentUser.address || '';
+    
+    // إخفاء رسائل الخطأ
+    document.querySelectorAll('.profile-edit-popup .error-message').forEach(el => {
+        el.classList.remove('show');
+    });
+    
+    // عرض النافذة
+    document.getElementById('profile-edit-popup').classList.add('show');
+    document.body.style.overflow = 'hidden'; // منع التمرير
+    
+    // التركيز على أول حقل
+    setTimeout(() => {
+        document.getElementById('edit-profile-name').focus();
+    }, 100);
+}
+
+// إغلاق نافذة التعديل
+function closeProfileEditPopup() {
+    document.getElementById('profile-edit-popup').classList.remove('show');
+    document.body.style.overflow = 'auto'; // إعادة التمرير
+}
+
+// حفظ التعديلات
+async function saveProfileEdit(event) {
+    event.preventDefault();
+    
+    // جلب القيم
+    const name = document.getElementById('edit-profile-name').value.trim();
+    const phone = document.getElementById('edit-profile-phone').value.trim();
+    const address = document.getElementById('edit-profile-address').value.trim();
+    
+    // التحقق من صحة البيانات
+    let isValid = true;
+    
+    if (!name) {
+        document.getElementById('edit-name-error').classList.add('show');
+        isValid = false;
+    } else {
+        document.getElementById('edit-name-error').classList.remove('show');
+    }
+    
+    if (!phone) {
+        document.getElementById('edit-phone-error').classList.add('show');
+        isValid = false;
+    } else {
+        document.getElementById('edit-phone-error').classList.remove('show');
+    }
+    
+    if (!isValid) {
+        showToast('الرجاء تعبئة جميع الحقول المطلوبة', 'error');
+        return;
+    }
+    
+    // حفظ البيانات
+    const oldName = currentUser.name;
+    currentUser.name = name;
+    currentUser.phone = phone;
+    currentUser.address = address;
+    
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    
+    // حفظ في Firebase إذا كان المستخدم مسجلاً
+    if (currentFirebaseUser) {
+        try {
+            await saveUserProfile(currentFirebaseUser.uid, {
+                name: name,
+                phone: phone,
+                address: address,
+                username: currentUser.username
+            });
+        } catch (error) {
+            console.error('خطأ في حفظ الملف الشخصي:', error);
+        }
+    }
+    
+    // تحديث واجهة المستخدم
+    renderProfileWithOrders();
+    updateAccountButton();
+    
+    // إغلاق النافذة
+    closeProfileEditPopup();
+    
+    // رسالة نجاح
+    showToast(`✅ تم تحديث الملف الشخصي بنجاح`, 'success');
+    
+    // تحديث اسم المستخدم في أيقونة الحساب إذا تغير
+    if (oldName !== name) {
+        updateAccountButton();
+    }
+}
+
 
 // ============================================
 // 🚀 إضافة سريعة للسلة
@@ -4512,6 +5553,503 @@ function showToast(message, type = 'success') {
         window.history.replaceState({}, document.title, window.location.pathname);
         return false;
     }
+}
+// ============================================
+// 📄 دوال صفحة تفاصيل المنتج المتطورة
+// ============================================
+
+// متغيرات التقييمات
+let productReviews = {};
+let currentProductId = null;
+let selectedRating = 0;
+
+// تحميل التقييمات من Firebase
+async function loadProductReviews(productId) {
+    try {
+        const snapshot = await database.ref(`product_reviews/${productId}`).once('value');
+        const data = snapshot.val();
+        if (data) {
+            // تحويل الكائن إلى مصفوفة
+            const reviews = Object.values(data);
+            productReviews[productId] = reviews;
+            return reviews;
+        }
+        productReviews[productId] = [];
+        return [];
+    } catch (error) {
+        console.error('خطأ في تحميل التقييمات:', error);
+        return [];
+    }
+}
+
+// حفظ تقييم جديد
+async function saveProductReview(productId, reviewData) {
+    try {
+        const newReviewRef = database.ref(`product_reviews/${productId}`).push();
+        await newReviewRef.set({
+            ...reviewData,
+            createdAt: new Date().toISOString(),
+            reviewId: newReviewRef.key
+        });
+        return true;
+    } catch (error) {
+        console.error('خطأ في حفظ التقييم:', error);
+        return false;
+    }
+}
+
+// ============================================
+// 🖥️ عرض تفاصيل المنتج المتطورة
+// ============================================
+
+function showFullProductDetail(productId) {
+    if (!Array.isArray(products)) {
+        console.error('products is not an array');
+        return;
+    }
+    
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    
+    currentProductId = productId;
+    selectedRating = 0;
+    
+    // تحميل التقييمات
+    loadProductReviews(productId).then(reviews => {
+        renderProductDetail(product, reviews);
+    });
+    
+    showSection('product-detail-full-page');
+}
+
+function renderProductDetail(product, reviews) {
+    const detailContent = document.getElementById('product-detail-full-content');
+    if (!detailContent) return;
+    
+    // الصور
+    const images = product.images && Array.isArray(product.images) && product.images.length > 0 
+        ? product.images 
+        : ['https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400'];
+    
+    const mainImage = images[0] || 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400';
+    
+    // حساب التقييمات
+    const avgRating = reviews && reviews.length > 0 
+        ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length 
+        : 0;
+    
+    const ratingCount = reviews ? reviews.length : 0;
+    
+    // توزيع التقييمات
+    const ratingDistribution = [0, 0, 0, 0, 0]; // 1-5 نجوم
+    if (reviews) {
+        reviews.forEach(r => {
+            const idx = Math.min(Math.floor((r.rating || 0) - 1), 4);
+            if (idx >= 0 && idx < 5) ratingDistribution[idx]++;
+        });
+    }
+    const maxRatingCount = Math.max(...ratingDistribution, 1);
+    
+    // تصنيف المنتج
+    const categoryNames = {
+        'hoodies': 'هوديز',
+        'shirts': 'تيشيرتات',
+        'jackets': 'جواكيت',
+        'sale': 'عروض'
+    };
+    const categoryColors = {
+        'hoodies': '#3b82f6',
+        'shirts': '#22c55e',
+        'jackets': '#8b5cf6',
+        'sale': '#ef4444'
+    };
+    const categoryName = categoryNames[product.category] || 'منتج';
+    const categoryColor = categoryColors[product.category] || '#6b7280';
+    
+    // المقاسات
+    let sizeHtml = '';
+    if (product.sizes) {
+        const sizeKeys = Object.keys(product.sizes);
+        sizeHtml = sizeKeys.map(s => {
+            const isAvailable = product.sizes[s].qty > 0;
+            return `<button class="size-btn" data-size="${s}" onclick="selectSizeFullDetail(this, '${s}')" ${!isAvailable ? 'disabled' : ''}>
+                ${s} ${!isAvailable ? '(نفد)' : ''}
+            </button>`;
+        }).join('');
+    }
+    
+    // الألوان
+    let colorHtml = '';
+    if (product.colors) {
+        const colorKeys = Object.keys(product.colors);
+        colorHtml = colorKeys.map(c => {
+            const isAvailable = product.colors[c] > 0;
+            return `<button class="color-btn" data-color="${c}" onclick="selectColorFullDetail(this, '${c}')" ${!isAvailable ? 'disabled' : ''}>
+                ${c} ${!isAvailable ? '(نفد)' : ''}
+            </button>`;
+        }).join('');
+    }
+    
+    // السعر مع الخصم
+    let priceHtml = `<span class="detail-price">${product.price} ج.م</span>`;
+    if (product.discount && product.discount > 0) {
+        const originalPrice = Math.round(product.price / (1 - product.discount / 100));
+        priceHtml = `
+            <span class="detail-price">
+                ${product.price} ج.م
+                <span class="original">${originalPrice} ج.م</span>
+            </span>
+            <span class="discount-badge">-${product.discount}%</span>
+        `;
+    }
+    
+    // نجمة التقييم
+    const fullStars = Math.floor(avgRating);
+    const hasHalfStar = avgRating - fullStars >= 0.5;
+    let starsHtml = '';
+    for (let i = 0; i < 5; i++) {
+        if (i < fullStars) {
+            starsHtml += '<i class="fas fa-star"></i>';
+        } else if (i === fullStars && hasHalfStar) {
+            starsHtml += '<i class="fas fa-star-half-alt"></i>';
+        } else {
+            starsHtml += '<i class="far fa-star"></i>';
+        }
+    }
+    
+    // التعليقات
+    let reviewsHtml = '';
+    if (reviews && reviews.length > 0) {
+        reviewsHtml = reviews.map(r => {
+            const reviewStars = Array(5).fill().map((_, i) => 
+                `<i class="fas fa-star${i < (r.rating || 0) ? '' : '-o'}"></i>`
+            ).join('');
+            
+            const reviewerInitial = r.userName ? r.userName.charAt(0).toUpperCase() : 'U';
+            const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('ar-EG') : '---';
+            
+            return `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-name">
+                            <span class="avatar">${reviewerInitial}</span>
+                            ${r.userName || 'مستخدم'}
+                        </div>
+                        <div class="review-stars">${reviewStars}</div>
+                        <div class="review-date">${date}</div>
+                    </div>
+                    <div class="review-text">${r.comment || ''}</div>
+                </div>
+            `;
+        }).join('');
+    } else {
+        reviewsHtml = `
+            <div class="no-reviews">
+                <i class="fas fa-comment-slash"></i>
+                <p>لا توجد تقييمات بعد. كن أول من يقيم هذا المنتج!</p>
+            </div>
+        `;
+    }
+    
+    // شريط التوزيع
+    let barsHtml = '';
+    const starLabels = ['5 نجوم', '4 نجوم', '3 نجوم', '2 نجوم', '1 نجم'];
+    for (let i = 4; i >= 0; i--) {
+        const percentage = maxRatingCount > 0 ? (ratingDistribution[i] / maxRatingCount) * 100 : 0;
+        barsHtml += `
+            <div class="bar-row">
+                <span>${starLabels[4 - i]}</span>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: ${percentage}%;"></div>
+                </div>
+                <span>${ratingDistribution[i]}</span>
+            </div>
+        `;
+    }
+    
+    // HTML الكامل
+    detailContent.innerHTML = `
+        <div class="product-detail-full-page">
+            <div class="product-detail-grid">
+                <!-- معرض الصور -->
+                <div class="detail-gallery">
+                    <img src="${mainImage}" alt="${product.name}" class="main-image" id="detail-main-image">
+                    <div class="thumbnail-list" id="detail-thumbnails">
+                        ${images.map((img, idx) => `
+                            <img src="${img}" alt="${product.name} - ${idx + 1}" 
+                                 onclick="changeDetailImage(this, '${img}')" 
+                                 class="${idx === 0 ? 'active' : ''}">
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- معلومات المنتج -->
+                <div class="detail-info">
+                    <div class="detail-category" style="background: ${categoryColor};">${categoryName}</div>
+                    <h2>${product.name}</h2>
+                    
+                    <div class="detail-rating">
+                        <div class="stars">${starsHtml}</div>
+                        <div class="rating-text">
+                            <strong>${avgRating.toFixed(1)}</strong> من 5
+                            <span style="color:#999;">(${ratingCount} تقييم)</span>
+                        </div>
+                    </div>
+                    
+                    <p class="detail-description">${product.description || 'منتج عالي الجودة من متجر نبض'}</p>
+                    
+                    <div class="detail-price-section">${priceHtml}</div>
+                    
+                    <div class="detail-options">
+                        ${sizeHtml ? `
+                            <div class="option-group">
+                                <label><i class="fas fa-ruler"></i> المقاس</label>
+                                <div class="size-options" id="size-options-full">${sizeHtml}</div>
+                            </div>
+                        ` : ''}
+                        
+                        ${colorHtml ? `
+                            <div class="option-group">
+                                <label><i class="fas fa-palette"></i> اللون</label>
+                                <div class="color-options" id="color-options-full">${colorHtml}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="detail-quantity">
+                        <label><i class="fas fa-sort-amount-up"></i> الكمية</label>
+                        <div class="qty-control">
+                            <button onclick="updateDetailQuantity(-1)">−</button>
+                            <input type="number" id="detail-quantity-full" value="1" min="1">
+                            <button onclick="updateDetailQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-actions">
+                        <button class="btn-add-cart" onclick="addToCartFromFullDetail(${product.id})">
+                            <i class="fas fa-shopping-cart"></i> أضف إلى السلة
+                        </button>
+                        <button class="btn-wishlist" onclick="toggleWishlist(${product.id})" id="wishlist-btn">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ===== قسم التقييمات ===== -->
+            <div class="reviews-section">
+                <div class="reviews-header">
+                    <h3><i class="fas fa-star"></i> التقييمات والتعليقات</h3>
+                    <button class="btn-small" onclick="scrollToReviewForm()" style="background: #164E63; color: #fff; padding: 6px 16px; border-radius: 8px; border: none; cursor: pointer;">
+                        <i class="fas fa-pen"></i> أضف تقييمك
+                    </button>
+                </div>
+                
+                <!-- ملخص التقييمات -->
+                <div class="rating-summary">
+                    <div class="avg-rating">
+                        <div class="number">${avgRating.toFixed(1)}</div>
+                        <div class="stars">${starsHtml}</div>
+                        <div class="count">${ratingCount} تقييم</div>
+                    </div>
+                    <div class="rating-bars">${barsHtml}</div>
+                </div>
+                
+                <!-- نموذج إضافة تقييم -->
+                <div class="add-review-form" id="review-form">
+                    <h4><i class="fas fa-pencil-alt"></i> اكتب تقييمك</h4>
+                    ${currentUser ? `
+                        <div class="rating-input" id="rating-stars-input">
+                            ${[1,2,3,4,5].map(num => `
+                                <button class="star-btn" data-value="${num}" onclick="setRating(${num})">☆</button>
+                            `).join('')}
+                        </div>
+                        <textarea id="review-comment" placeholder="شاركنا رأيك في هذا المنتج..." rows="3"></textarea>
+                        <div class="review-actions">
+                            <button class="btn-submit-review" onclick="submitReview(${product.id})">
+                                <i class="fas fa-paper-plane"></i> إرسال التقييم
+                            </button>
+                            <button class="btn-submit-review" onclick="clearReviewForm()" style="background: #e5e7eb; color: #666;">
+                                إلغاء
+                            </button>
+                        </div>
+                    ` : `
+                        <p style="color:#999;">
+                            <i class="fas fa-lock"></i> 
+                            <a href="#" onclick="showSection('login'); return false;" style="color:#E5C97B; font-weight:600;">سجل الدخول</a> 
+                            لتتمكن من إضافة تقييم
+                        </p>
+                    `}
+                </div>
+                
+                <!-- قائمة التعليقات -->
+                <div class="reviews-list" id="reviews-list">
+                    ${reviewsHtml}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // تهيئة المتغيرات
+    window.selectedSizeFull = null;
+    window.selectedColorFull = null;
+    
+    // إضافة تأثيرات
+    setTimeout(() => {
+        document.querySelectorAll('.review-item').forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.1}s`;
+        });
+    }, 100);
+}
+
+// ============================================
+// 🖼️ دوال معرض الصور
+// ============================================
+
+function changeDetailImage(element, imageUrl) {
+    const mainImage = document.getElementById('detail-main-image');
+    if (mainImage) {
+        mainImage.src = imageUrl;
+        mainImage.style.opacity = '0';
+        setTimeout(() => {
+            mainImage.style.opacity = '1';
+            mainImage.style.transition = 'opacity 0.3s ease';
+        }, 50);
+    }
+    
+    // تحديث الصور المصغرة
+    document.querySelectorAll('#detail-thumbnails img').forEach(img => {
+        img.classList.remove('active');
+        if (img.src === imageUrl || img.getAttribute('src') === imageUrl) {
+            img.classList.add('active');
+        }
+    });
+}
+
+// ============================================
+// 🔘 دوال اختيار المقاس واللون
+// ============================================
+
+function selectSizeFullDetail(btn, size) {
+    document.querySelectorAll('#size-options-full .size-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    window.selectedSizeFull = size;
+}
+
+function selectColorFullDetail(btn, color) {
+    document.querySelectorAll('#color-options-full .color-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    window.selectedColorFull = color;
+}
+
+
+function updateDetailQuantity(delta) {
+    const input = document.getElementById('detail-quantity-full');
+    if (!input) return;
+    let val = parseInt(input.value) || 1;
+    val = Math.max(1, val + delta);
+    input.value = val;
+}
+
+
+
+function setRating(value) {
+    selectedRating = value;
+    const buttons = document.querySelectorAll('#rating-stars-input .star-btn');
+    buttons.forEach((btn, index) => {
+        const num = parseInt(btn.dataset.value);
+        if (num <= value) {
+            btn.textContent = '★';
+            btn.classList.add('active');
+        } else {
+            btn.textContent = '☆';
+            btn.classList.remove('active');
+        }
+    });
+}
+
+function clearReviewForm() {
+    selectedRating = 0;
+    document.querySelectorAll('#rating-stars-input .star-btn').forEach(btn => {
+        btn.textContent = '☆';
+        btn.classList.remove('active');
+    });
+    document.getElementById('review-comment').value = '';
+}
+
+function scrollToReviewForm() {
+    const form = document.getElementById('review-form');
+    if (form) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (currentUser) {
+            document.getElementById('review-comment')?.focus();
+        }
+    }
+}
+
+
+
+async function submitReview(productId) {
+    if (!currentUser) {
+        showToast('الرجاء تسجيل الدخول أولاً', 'error');
+        showSection('login');
+        return;
+    }
+    
+    if (selectedRating === 0) {
+        showToast('الرجاء اختيار عدد النجوم', 'error');
+        return;
+    }
+    
+    const comment = document.getElementById('review-comment')?.value?.trim();
+    if (!comment) {
+        showToast('الرجاء كتابة تعليق', 'error');
+        return;
+    }
+    
+    const reviewData = {
+        userId: currentUser.uid || 'anonymous',
+        userName: currentUser.name || 'مستخدم',
+        rating: selectedRating,
+        comment: comment,
+        productId: productId,
+        createdAt: new Date().toISOString()
+    };
+    
+    showToast('⏳ جاري إرسال التقييم...', 'info');
+    
+    const success = await saveProductReview(productId, reviewData);
+    
+    if (success) {
+        showToast('✅ تم إضافة تقييمك بنجاح!', 'success');
+        clearReviewForm();
+        // إعادة تحميل التفاصيل
+        const product = products.find(p => p.id === productId);
+        if (product) {
+            const reviews = await loadProductReviews(productId);
+            renderProductDetail(product, reviews);
+        }
+    } else {
+        showToast('❌ حدث خطأ في إرسال التقييم', 'error');
+    }
+}
+
+
+
+function toggleWishlist(productId) {
+    const btn = document.getElementById('wishlist-btn');
+    if (btn) {
+        btn.classList.toggle('active');
+        const isActive = btn.classList.contains('active');
+        btn.innerHTML = `<i class="fas ${isActive ? 'fa-heart' : 'fa-heart'}"></i>`;
+        showToast(isActive ? '✅ تمت الإضافة إلى المفضلة' : '❌ تمت الإزالة من المفضلة', 'success');
+    }
+}
+
+
+
+function goBackToProducts() {
+    showSection('products');
 }
 async function loadUserDataFromDatabase(uid) {
     if (!uid) return;
@@ -5772,10 +7310,10 @@ async function renderProfileWithOrders() {
                     </div>
                     
                     <div class="profile-actions">
-                        <button class="btn-action btn-edit" onclick="editProfile()">
-                            <i class="fas fa-pen"></i>
-                            ${currentLang === 'ar' ? 'تعديل الملف الشخصي' : 'Edit Profile'}
-                        </button>
+                        <button class="btn-action btn-edit" onclick="openProfileEditPopup()">
+    <i class="fas fa-pen"></i>
+    ${currentLang === 'ar' ? 'تعديل الملف الشخصي' : 'Edit Profile'}
+</button>
                         <button class="btn-action btn-orders" onclick="showSection('cart')">
                             <i class="fas fa-shopping-cart"></i>
                             ${currentLang === 'ar' ? 'عرض السلة' : 'View Cart'} (${cart.reduce((a, i) => a + (i.quantity || 0), 0)})
