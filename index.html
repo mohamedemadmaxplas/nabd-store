@@ -6574,115 +6574,136 @@ async function resetDailyCounter() {
     }
 }
         
-        // ==================== INITIALIZATION ====================
-        async function initializeData() {
-             
-        checkAutoLoginFromTecnoShark();
-        initializeVisitorCounter();
-            // Load products from cloud first
-            const cloudProducts = await loadProductsFromCloud();
-            if (cloudProducts) {
-                products = cloudProducts;
-            } else {
-                products = [...defaultProducts];
-                await saveProductsToCloud(products);
-            }
-            
-            // Update nextProductId
-            if (products.length > 0) {
-                const maxId = Math.max(...products.map(p => p.id));
-                nextProductId = maxId + 1;
-            }
-            
-            // Load users from localStorage
-            const storedUsers = localStorage.getItem('users');
-            if (storedUsers) {
-                try {
-                    users = JSON.parse(storedUsers);
-                    if (!Array.isArray(users)) users = [];
-                } catch(e) { users = []; }
-            } else {
-                users = [];
-            }
-            
-            // Load orders from localStorage
-            const storedOrders = localStorage.getItem('orders');
-            if (storedOrders) {
-                try {
-                    orders = JSON.parse(storedOrders);
-                    if (!Array.isArray(orders)) orders = [];
-                } catch(e) { orders = []; }
-            } else {
-                orders = [];
-            }
-            
-            // Load currentUser from localStorage
-            const storedUser = localStorage.getItem('currentUser');
-            if (storedUser) {
-                try {
-                    currentUser = JSON.parse(storedUser);
-                } catch(e) { currentUser = null; }
-            }
-            
-            // Load cart from localStorage
-            const storedCart = localStorage.getItem('cart');
-            if (storedCart) {
-                try {
-                    cart = JSON.parse(storedCart);
-                    if (!Array.isArray(cart)) cart = [];
-                } catch(e) { cart = []; }
-            } else {
-                cart = [];
-            }
-            
-            // Listen for Firebase auth state changes
-            auth.onAuthStateChanged(async (user) => {
-                if (user) {
-                    currentFirebaseUser = user;
-                    const profile = await loadUserProfile(user.uid);
-                    if (profile) {
-                        currentUser = {
-                            uid: user.uid,
-                            name: profile.name,
-                            phone: profile.phone,
-                            email: user.email,
-                            address: profile.address || '',
-                            username: profile.username
-                        };
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    } else {
-                        currentUser = {
-                            uid: user.uid,
-                            name: user.displayName || user.email.split('@')[0],
-                            email: user.email,
-                            phone: '',
-                            address: ''
-                        };
-                    }
-                    
-                    const savedCart = await loadUserCart(user.uid);
-                    const savedOrders = await loadUserOrders(user.uid);
-                    if (savedCart.length > 0) cart = savedCart;
-                    if (savedOrders.length > 0) orders = savedOrders;
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    localStorage.setItem('orders', JSON.stringify(orders));
-                    updateCartCount();
-                    updateAccountButton();
-                    if (document.getElementById('cart').classList.contains('active')) renderCart();
-                    if (document.getElementById('profile').classList.contains('active')) renderProfileWithOrders();
-                } else {
-                    currentFirebaseUser = null;
+    // ==================== INITIALIZATION ====================
+async function initializeData() {
+    checkAutoLoginFromTecnoShark();
+    initializeVisitorCounter();
+    
+    // Load products from cloud first
+    const cloudProducts = await loadProductsFromCloud();
+    if (cloudProducts) {
+        products = cloudProducts;
+    } else {
+        products = [...defaultProducts];
+        await saveProductsToCloud(products);
+    }
+    
+    // Update nextProductId
+    if (products.length > 0) {
+        const maxId = Math.max(...products.map(p => p.id));
+        nextProductId = maxId + 1;
+    }
+    
+    // Load users from localStorage
+    const storedUsers = localStorage.getItem('users');
+    if (storedUsers) {
+        try {
+            users = JSON.parse(storedUsers);
+            if (!Array.isArray(users)) users = [];
+        } catch(e) { users = []; }
+    } else {
+        users = [];
+    }
+    
+    // Load orders from localStorage
+    const storedOrders = localStorage.getItem('orders');
+    if (storedOrders) {
+        try {
+            orders = JSON.parse(storedOrders);
+            if (!Array.isArray(orders)) orders = [];
+        } catch(e) { orders = []; }
+    } else {
+        orders = [];
+    }
+    
+    // Load currentUser from localStorage
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+        try {
+            currentUser = JSON.parse(storedUser);
+            // التأكد من وجود photoURL في currentUser
+            if (currentUser && !currentUser.photoURL) {
+                const savedPhoto = localStorage.getItem('userPhotoURL');
+                if (savedPhoto) {
+                    currentUser.photoURL = savedPhoto;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 }
-            });
+            }
+        } catch(e) { currentUser = null; }
+    }
+    
+    // Load cart from localStorage
+    const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+        try {
+            cart = JSON.parse(storedCart);
+            if (!Array.isArray(cart)) cart = [];
+        } catch(e) { cart = []; }
+    } else {
+        cart = [];
+    }
+    
+    // Listen for Firebase auth state changes
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentFirebaseUser = user;
+            const profile = await loadUserProfile(user.uid);
             
+            // استعادة الصورة من localStorage
+            const savedPhotoURL = localStorage.getItem('userPhotoURL') || user.photoURL || null;
+            
+            if (profile) {
+                currentUser = {
+                    uid: user.uid,
+                    name: profile.name || user.displayName,
+                    phone: profile.phone,
+                    email: user.email,
+                    address: profile.address || '',
+                    username: profile.username,
+                    photoURL: savedPhotoURL || profile.photoURL || null
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            } else {
+                currentUser = {
+                    uid: user.uid,
+                    name: user.displayName || user.email.split('@')[0],
+                    email: user.email,
+                    phone: '',
+                    address: '',
+                    photoURL: savedPhotoURL
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+            
+            // حفظ الصورة مرة أخرى للتأكيد
+            if (currentUser.photoURL) {
+                localStorage.setItem('userPhotoURL', currentUser.photoURL);
+            }
+            
+            const savedCart = await loadUserCart(user.uid);
+            const savedOrders = await loadUserOrders(user.uid);
+            if (savedCart.length > 0) cart = savedCart;
+            if (savedOrders.length > 0) orders = savedOrders;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('orders', JSON.stringify(orders));
             updateCartCount();
-            renderFeaturedProducts();
-            renderAllProducts();
             updateAccountButton();
-            
-            // Start listening for real-time product updates
-            listenForProductUpdates();
+            if (document.getElementById('cart').classList.contains('active')) renderCart();
+            if (document.getElementById('profile').classList.contains('active')) renderProfileWithOrders();
+        } else {
+            currentFirebaseUser = null;
+            // لا تحذف الصورة من localStorage عند تسجيل الخروج
         }
+    });
+    
+    updateCartCount();
+    renderFeaturedProducts();
+    renderAllProducts();
+    updateAccountButton();
+    
+    // Start listening for real-time product updates
+    listenForProductUpdates();
+}
         // ==================== دوال حفظ واسترجاع البيانات من Firebase ====================
 
 // حفظ المنتجات إلى السحابة
@@ -7167,15 +7188,18 @@ async function compressImage(file, maxWidth = 1200, maxHeight = 1200) {
 }
         
         
-      async function handleGoogleLogin(response) {
+     async function handleGoogleLogin(response) {
     try {
         const credential = response.credential;
         const result = await auth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(credential));
         const user = result.user;
         currentFirebaseUser = user;
         
-        // تخزين صورة المستخدم
+        // تخزين صورة المستخدم في localStorage
         const photoURL = user.photoURL || null;
+        if (photoURL) {
+            localStorage.setItem('userPhotoURL', photoURL);
+        }
         
         // Check if user profile exists in database
         const profile = await loadUserProfile(user.uid);
@@ -7189,7 +7213,7 @@ async function compressImage(file, maxWidth = 1200, maxHeight = 1200) {
                 email: user.email,
                 address: profile.address || '',
                 username: profile.username,
-                photoURL: photoURL  // ← إضافة صورة المستخدم
+                photoURL: photoURL
             };
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             
@@ -7208,7 +7232,7 @@ async function compressImage(file, maxWidth = 1200, maxHeight = 1200) {
                 uid: user.uid,
                 name: user.displayName,
                 email: user.email,
-                photoURL: photoURL  // ← إضافة صورة المستخدم
+                photoURL: photoURL
             };
             document.getElementById('google-user-name').innerText = user.displayName || user.email;
             document.getElementById('google-data-popup').classList.add('show');
@@ -7300,12 +7324,12 @@ async function renderProfileWithOrders() {
             profileInfo.innerHTML = `
                 <div class="profile-card-modern">
                     <div class="profile-header">
-                       <div class="profile-avatar-modern" style="overflow:hidden; padding:0;">
-    ${currentUser.photoURL ? 
-        `<img src="${currentUser.photoURL}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="${currentUser.name}">` : 
-        initials
+                    <div class="profile-avatar-modern" style="overflow:hidden; padding:0;">
+    ${(currentUser.photoURL || localStorage.getItem('userPhotoURL')) ? 
+        `<img src="${currentUser.photoURL || localStorage.getItem('userPhotoURL')}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;" alt="${currentUser.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='${initials}${'<span class=\'online-dot\'></span>'}';">
+        <span class="online-dot"></span>` : 
+        `${initials}<span class="online-dot"></span>`
     }
-    <span class="online-dot"></span>
 </div>
                         <div class="profile-name-section">
                             <h2>${currentUser.name || 'مستخدم'}</h2>
@@ -7664,20 +7688,24 @@ async function sendStatusUpdateToCustomer(customerPhone, orderNumber, newStatus,
             showSection('home');
         }
         
-      async function logout() {
+    async function logout() {
     if (currentFirebaseUser) {
-        // حفظ البيانات قبل الخروج
+        // حفظ البيانات قبل الخروج مع الاحتفاظ بالصورة
         await saveUserCart(currentFirebaseUser.uid, cart);
         await saveUserOrders(currentFirebaseUser.uid, orders);
         
-        // ✅ إيقاف الاستماع (إطفاء الراديو قبل الخروج من الغرفة)
-        database.ref(`users/${currentFirebaseUser.uid}/cart`).off();
+        // حفظ صورة المستخدم في localStorage قبل الخروج
+        if (currentUser && currentUser.photoURL) {
+            localStorage.setItem('userPhotoURL', currentUser.photoURL);
+        }
         
-        // تسجيل الخروج من Firebase Auth
+        database.ref(`users/${currentFirebaseUser.uid}/cart`).off();
         await auth.signOut();
     }
     
-    // تنظيف البيانات المحلية
+    // تنظيف البيانات المحلية مع الاحتفاظ بالصورة
+    const savedPhotoURL = currentUser?.photoURL || localStorage.getItem('userPhotoURL');
+    
     currentUser = null;
     currentFirebaseUser = null;
     cart = [];
@@ -7686,20 +7714,30 @@ async function sendStatusUpdateToCustomer(customerPhone, orderNumber, newStatus,
     localStorage.removeItem('cart');
     localStorage.removeItem('orders');
     
-    // تحديث الواجهة
+    // استعادة الصورة المحفوظة مؤقتاً
+    if (savedPhotoURL) {
+        localStorage.setItem('userPhotoURL', savedPhotoURL);
+    }
+    
     updateCartCount();
     updateAccountButton();
     showToast('تم تسجيل الخروج', 'success');
     showSection('home');
 }
         
-        function updateAccountButton() {
+      function updateAccountButton() {
     const container = document.getElementById('account-btn-container');
     if (!container) return;
     
     if (currentUser) {
         // التحقق إذا كان المستخدم لديه صورة من Google
-        const photoURL = currentUser.photoURL || null;
+        let photoURL = currentUser.photoURL || null;
+        
+        // إذا لم توجد صورة في currentUser، حاول جلبها من localStorage
+        if (!photoURL) {
+            photoURL = localStorage.getItem('userPhotoURL') || null;
+        }
+        
         const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'U';
         
         if (photoURL) {
