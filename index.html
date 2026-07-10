@@ -3801,6 +3801,107 @@
     object-fit: cover;
     border-radius: 50%;
 }
+/* ============================================
+   🦈 تحسينات الفوتر - Footer
+   ============================================ */
+
+.footer {
+    background: linear-gradient(135deg, #0A2F3F, #164E63);
+    color: #fff;
+    padding: 1.5rem 5% 0.8rem;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #E5C97B, #c9a646, #E5C97B);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-section {
+    padding: 0.5rem;
+}
+
+.footer-section h3 {
+    color: #E5C97B;
+    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+}
+
+.footer-section a {
+    transition: all 0.3s ease;
+}
+
+.footer-section a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 0.8rem;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.35);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* تجاوب للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .footer-section {
+        border-left: none !important;
+        padding-left: 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 1rem;
+    }
+    
+    .footer-section:last-child {
+        border-bottom: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 1rem 3% 0.6rem;
+    }
+    
+    .footer-section h3 {
+        font-size: 0.85rem;
+    }
+    
+    .footer-section a {
+        font-size: 0.7rem;
+        padding: 6px 14px;
+    }
+}
     </style>
 </head>
 <body>
@@ -4470,14 +4571,104 @@
         </div>
     </div>
     
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section"><h3><i class="fas fa-heart"></i> نبض</h3><p>متجر الهوديز العصرية</p></div>
-            <div class="footer-section"><h3><i class="fas fa-headset"></i> الدعم</h3><ul><li><i class="fas fa-phone"></i> 01553011171</li><li><i class="fab fa-whatsapp"></i> واتساب</li></ul></div>
-            <div class="footer-section"><h3><i class="fas fa-code"></i> Developing - المطورين</h3><ul><li> Mohammed Emad & Abdalrhman Mohamd </li><li>01126125881 & 01144100018</li><li>Tecno Shark Company</li></ul></div>
+   <footer class="footer">
+    <div class="footer-content">
+        <!-- ===== القسم الأول: Tecno Shark - المطورين ===== -->
+        <div class="footer-section" style="text-align: center; border-left: 1px solid rgba(255,255,255,0.08); padding-left: 1.5rem;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 0.5rem;">
+                <img src="https://i.ibb.co/Fk4jw8pR/4840e6da-a9c5-4858-a78d-8ceb60d1eaaa.png" 
+                     alt="Tecno Shark" 
+                     style="width: 45px; height: 45px; object-fit: contain; border-radius: 12px;">
+                <h3 style="color: #E5C97B; font-size: 1.2rem; font-weight: 700; margin: 0;">
+                    <i class="fas fa-shark" style="color: #E5C97B; margin-left: 8px;"></i>
+                    Tecno Shark
+                </h3>
+            </div>
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 0.8rem;">
+                <i class="fas fa-code" style="color: #E5C97B;"></i> 
+                تطوير وحلول تقنية
+            </p>
+            
+            <!-- أرقام المطورين -->
+            <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin-bottom: 0.8rem;">
+                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-phone" style="color: #E5C97B; font-size: 0.7rem;"></i>
+                    <span style="direction: ltr; display: inline-block;">01126125881</span>
+                </span>
+                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-phone" style="color: #E5C97B; font-size: 0.7rem;"></i>
+                    <span style="direction: ltr; display: inline-block;">01144100018</span>
+                </span>
+            </div>
+            
+            <!-- أزرار التواصل -->
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                <!-- زر واتساب -->
+                <a href="https://wa.me/201126125881" target="_blank" rel="noopener noreferrer" 
+                   style="display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; padding: 7px 18px; border-radius: 25px; text-decoration: none; font-size: 0.75rem; font-weight: 600; transition: all 0.3s ease; width: fit-content;">
+                    <i class="fab fa-whatsapp" style="font-size: 1rem;"></i>
+                    واتساب المطورين
+                </a>
+                
+                <!-- زر الانتقال لصفحة الشركة -->
+                <a href="https://tecno-shark.vercel.app/" target="_blank" rel="noopener noreferrer" 
+                   style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #E5C97B, #c9a646); color: #164E63; padding: 7px 18px; border-radius: 25px; text-decoration: none; font-size: 0.75rem; font-weight: 600; transition: all 0.3s ease; width: fit-content;">
+                    <i class="fas fa-shark" style="font-size: 0.9rem;"></i>
+                    زيارة الشركة
+                </a>
+            </div>
         </div>
-        <div class="footer-bottom"><p>© 2026 نبض - جميع الحقوق محفوظة</p></div>
-    </footer>
+        
+        <!-- ===== القسم الثاني: نبض - الدعم الفني ===== -->
+        <div class="footer-section" style="text-align: center;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 0.5rem;">
+                <svg viewBox="0 0 100 100" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#E5C97B" stroke-width="1.5"/>
+                    <text x="50" y="67" text-anchor="middle" fill="#164E63" font-size="28" font-weight="bold" font-family="'Cairo', sans-serif">نبض</text>
+                </svg>
+                <h3 style="color: #E5C97B; font-size: 1.2rem; font-weight: 700; margin: 0;">
+                    <i class="fas fa-heart" style="color: #E5C97B; margin-left: 6px;"></i>
+                    نبض
+                </h3>
+            </div>
+            <p style="font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-bottom: 0.8rem;">
+                <i class="fas fa-tshirt" style="color: #E5C97B;"></i> 
+                متجر الهوديز العصرية
+            </p>
+            
+            <!-- معلومات الدعم الفني -->
+            <div style="display: flex; flex-direction: column; gap: 5px; align-items: center; margin-bottom: 0.8rem;">
+                <span style="font-size: 0.75rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-phone" style="color: #E5C97B; font-size: 0.7rem;"></i>
+                    <span style="direction: ltr; display: inline-block;">01553011171</span>
+                </span>
+                <span style="font-size: 0.7rem; color: rgba(255,255,255,0.4); display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-clock" style="color: #E5C97B; font-size: 0.7rem;"></i>
+                    جميع أيام الأسبوع
+                </span>
+            </div>
+            
+            <!-- زر واتساب الدعم الفني -->
+            <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                <a href="https://wa.me/201553011171" target="_blank" rel="noopener noreferrer" 
+                   style="display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; padding: 7px 18px; border-radius: 25px; text-decoration: none; font-size: 0.75rem; font-weight: 600; transition: all 0.3s ease; width: fit-content;">
+                    <i class="fab fa-whatsapp" style="font-size: 1rem;"></i>
+                    واتساب الدعم
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- حقوق النشر -->
+    <div class="footer-bottom" style="text-align: center; padding-top: 0.8rem; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 0.8rem; font-size: 0.65rem; color: rgba(255,255,255,0.35);">
+        <p>
+            © 2026 نبض - جميع الحقوق محفوظة | 
+            <span style="color: #E5C97B;">
+                <i class="fas fa-shark"></i> Tecno Shark
+            </span>
+        </p>
+    </div>
+</footer>
     <!-- ============================================
      👤 نافذة تعديل الملف الشخصي
      ============================================ -->
