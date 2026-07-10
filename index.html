@@ -5602,6 +5602,10 @@ async function saveProductReview(productId, reviewData) {
 // 🖥️ عرض تفاصيل المنتج المتطورة
 // ============================================
 
+// ============================================
+// 🖥️ عرض تفاصيل المنتج المتطورة
+// ============================================
+
 function showFullProductDetail(productId) {
     if (!Array.isArray(products)) {
         console.error('products is not an array');
@@ -7844,53 +7848,7 @@ function goBackToProfile() {
     showSection('profile');
 }
         
-        function showFullProductDetail(productId) {
-            if (!Array.isArray(products)) {
-                console.error('products is not an array');
-                return;
-            }
-            const product = products.find(p => p.id === productId);
-            if (!product) return;
-            const images = product.images && Array.isArray(product.images) ? product.images : ['https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=400'];
-            const carouselHtml = renderProductCarousel(images, `detail-${product.id}`);
-            
-            const sizeHtml = product.sizes ? Object.keys(product.sizes).map(s => 
-                `<button class="size-btn" data-size="${s}" onclick="selectSizeFull(this, '${s}')">${s}</button>`
-            ).join('') : '';
-            
-            const colorHtml = product.colors ? Object.keys(product.colors).map(c => 
-                `<button class="color-btn" data-color="${c}" onclick="selectColorFull(this, '${c}')">${c}</button>`
-            ).join('') : '';
-            
-            const detailContent = document.getElementById('product-detail-full-content');
-            if (detailContent) {
-                detailContent.innerHTML = `
-                    <div class="product-detail-full-page">
-                        <div class="product-detail-grid">
-                            <div>${carouselHtml}</div>
-                            <div class="detail-info">
-                                <h2>${product.name}</h2>
-                                <p>${product.description || ''}</p>
-                                <div class="detail-price">${product.price} ج.م</div>
-                                <div class="options">
-                                    <label>${currentLang === 'ar' ? 'المقاس:' : 'Size:'}</label>
-                                    <div class="size-options" id="size-options-full">${sizeHtml}</div>
-                                    <label>${currentLang === 'ar' ? 'اللون:' : 'Color:'}</label>
-                                    <div class="color-options" id="color-options-full">${colorHtml}</div>
-                                    <label>${currentLang === 'ar' ? 'الكمية:' : 'Quantity:'}</label>
-                                    <input type="number" id="detail-quantity-full" min="1" value="1" style="width:80px; padding:6px;">
-                                </div>
-                                <button class="btn" onclick="addToCartFromFullDetail(${product.id})">${currentLang === 'ar' ? 'أضف للسلة' : 'Add to Cart'}</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            window.selectedSizeFull = null;
-            window.selectedColorFull = null;
-            attachCarouselListeners(`carousel-detail-${product.id}`, images.length);
-            showSection('product-detail-full-page');
-        }
+       
         
         function selectSizeFull(btn, size) {
             document.querySelectorAll('#size-options-full .size-btn').forEach(b => b.classList.remove('selected'));
