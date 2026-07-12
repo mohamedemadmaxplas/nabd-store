@@ -5485,6 +5485,44 @@
         padding: 0.8rem;
     }
 }
+/* ============================================
+   🎯 تحسين شعار نبض - الصورة الدائرية
+   ============================================ */
+
+/* شعار الهيدر */
+.logo-img {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #E5C97B;
+    box-shadow: 0 0 0 2px #E5C97B, 0 4px 15px rgba(229, 201, 123, 0.3);
+    transition: all 0.3s ease;
+}
+
+.logo-img:hover {
+    transform: scale(1.08) rotate(-5deg);
+    box-shadow: 0 0 0 3px #E5C97B, 0 8px 30px rgba(229, 201, 123, 0.4);
+}
+
+/* شعار الفوتر */
+.footer-section .section-title img {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #E5C97B;
+    transition: all 0.3s ease;
+}
+
+.footer-section .section-title img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(229, 201, 123, 0.3);
+}
+
+/* تحسين للجوال */
+@media (max-width: 480px) {
+    .logo-img {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -5500,13 +5538,13 @@
             <div class="search-btn" id="search-btn"><i class="fas fa-search"></i></div>
             <div id="account-btn-container"></div>
         </div>
-        <div class="logo-container" onclick="showSection('home'); return false;" style="cursor:pointer;">
-            <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#164E63" stroke-width="1.5"/>
-                <text x="50" y="67" text-anchor="middle" fill="#164E63" font-size="28" font-weight="bold" font-family="'Cairo', sans-serif">نبض</text>
-            </svg>
-            <span class="logo-text">نبض</span>
-        </div>
+       <div class="logo-container" onclick="showSection('home'); return false;" style="cursor:pointer;">
+    <img src="https://i.ibb.co/S7JGhYnj/629392956-803927426045708-8202655819727926680-n.jpg" 
+         alt="نبض" 
+         class="logo-img"
+         style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid #E5C97B; box-shadow:0 0 0 2px #E5C97B; transition:transform 0.3s ease;">
+    <span class="logo-text">نبض</span>
+</div>
         <div class="header-right">
          <div class="cart-icon" id="cart-icon" onclick="showSection('cart'); return false;" style="cursor:pointer;">
     <i class="fas fa-shopping-cart"></i>
@@ -6160,12 +6198,11 @@
         <!-- ===== القسم الأيمن: نبض ===== -->
         <div class="footer-section">
             <div class="section-title">
-                <svg viewBox="0 0 100 100" width="28" height="28" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#E5C97B" stroke-width="1.5"/>
-                    <text x="50" y="67" text-anchor="middle" fill="#164E63" font-size="28" font-weight="bold" font-family="'Cairo', sans-serif">نبض</text>
-                </svg>
-                <span><i class="fas fa-heart"></i> نبض</span>
-            </div>
+    <img src="https://i.ibb.co/S7JGhYnj/629392956-803927426045708-8202655819727926680-n.jpg" 
+         alt="نبض" 
+         style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:2px solid #E5C97B;">
+    <span><i class="fas fa-heart"></i> نبض</span>
+</div>
             <div class="sub-text">متجر الهوديز العصرية</div>
             
             <!-- رقم الدعم -->
