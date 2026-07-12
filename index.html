@@ -5063,6 +5063,428 @@
         padding: 0.8rem;
     }
 }
+/* ============================================
+   📄 صفحة تفاصيل الطلب - Order Details
+   ============================================ */
+
+/* الحاوية الرئيسية */
+.order-detail-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease;
+}
+
+/* زر الرجوع المدمج */
+.order-detail-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(22, 78, 99, 0.06);
+    color: #164E63;
+    border: 2px solid transparent;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    font-family: 'Cairo', sans-serif;
+}
+
+.order-detail-back:hover {
+    background: #164E63;
+    color: #fff;
+    transform: translateX(-4px);
+    box-shadow: 0 4px 15px rgba(22, 78, 99, 0.2);
+}
+
+.order-detail-back i {
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.order-detail-back:hover i {
+    transform: translateX(-4px);
+}
+
+/* الحاوية الأساسية */
+.order-detail-container {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 8px 35px rgba(22, 78, 99, 0.08);
+    border: 1px solid rgba(229, 201, 123, 0.12);
+}
+
+/* رأس الطلب */
+.order-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 1.5rem;
+}
+
+.order-detail-header .order-number {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #164E63;
+}
+
+.order-detail-header .order-number span {
+    color: #E5C97B;
+}
+
+.order-detail-header .order-status-badge-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.order-detail-header .order-status-badge-large.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.order-detail-header .order-status-badge-large.delivered {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.order-detail-header .order-status-badge-large.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.order-detail-header .order-status-badge-large.returned {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+/* معلومات الطلب */
+.order-detail-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: #f8f9fa;
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.order-detail-info .info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-detail-info .info-item .label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.order-detail-info .info-item .value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+    margin-top: 2px;
+}
+
+/* قائمة المنتجات */
+.order-items-list {
+    margin: 1.5rem 0;
+}
+
+.order-items-list .section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #164E63;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-items-list .section-title i {
+    color: #E5C97B;
+}
+
+.order-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    border-right: 3px solid #E5C97B;
+    transition: all 0.2s ease;
+}
+
+.order-item-card:hover {
+    background: #f0f1f2;
+}
+
+.order-item-card .item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-item-card .item-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+}
+
+.order-item-card .item-details {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.order-item-card .item-price {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #E5C97B;
+}
+
+/* بيانات العميل */
+.order-customer-info {
+    background: #f8f9fa;
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    margin: 1rem 0 1.5rem;
+}
+
+.order-customer-info .section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #164E63;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-customer-info .section-title i {
+    color: #E5C97B;
+}
+
+.order-customer-info .customer-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.order-customer-info .customer-row .field {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-customer-info .customer-row .field .label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    color: #999;
+    font-weight: 600;
+}
+
+.order-customer-info .customer-row .field .value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+}
+
+/* إجمالي الطلب */
+.order-total-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    background: linear-gradient(135deg, #164E63, #0A2F3F);
+    border-radius: 16px;
+    color: #fff;
+    margin: 1.5rem 0;
+}
+
+.order-total-box .total-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+.order-total-box .total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #E5C97B;
+}
+
+.order-total-box .total-value small {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+/* أزرار الإجراءات */
+.order-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.order-actions .btn-action {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+    min-width: 120px;
+    font-family: 'Cairo', sans-serif;
+}
+
+.order-actions .btn-back {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+.order-actions .btn-back:hover {
+    background: #d1d5db;
+    transform: translateY(-2px);
+}
+
+.order-actions .btn-cancel {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.order-actions .btn-cancel:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
+}
+
+.order-actions .btn-cancel:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.order-actions .btn-whatsapp {
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+}
+
+.order-actions .btn-whatsapp:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* ============================================
+   📱 تحسينات الجوال
+   ============================================ */
+@media (max-width: 600px) {
+    .order-detail-container {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+    
+    .order-detail-back {
+        font-size: 0.7rem;
+        padding: 6px 14px;
+    }
+    
+    .order-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .order-detail-header .order-number {
+        font-size: 1rem;
+    }
+    
+    .order-detail-header .order-status-badge-large {
+        font-size: 0.7rem;
+        padding: 4px 14px;
+    }
+    
+    .order-detail-info {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.8rem;
+    }
+    
+    .order-detail-info .info-item .value {
+        font-size: 0.75rem;
+    }
+    
+    .order-item-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+        padding: 0.5rem 0.8rem;
+    }
+    
+    .order-item-card .item-price {
+        align-self: flex-end;
+    }
+    
+    .order-customer-info .customer-row {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .order-total-box {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.3rem;
+        padding: 0.8rem;
+    }
+    
+    .order-total-box .total-value {
+        font-size: 1.3rem;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+    }
+    
+    .order-actions .btn-action {
+        flex: unset;
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .order-detail-info {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+    
+    .order-detail-container {
+        padding: 0.8rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -9827,7 +10249,7 @@ if (document.readyState === 'loading') {
         
     
         
-       // ============================================
+      // ============================================
 // 📄 دوال صفحة تفاصيل الطلب
 // ============================================
 
@@ -9920,7 +10342,7 @@ function displayOrderDetail(order) {
             </div>
         `).join('');
     } else {
-        itemsHtml = '<p style="color:#999; text-align:center;">لا توجد منتجات</p>';
+        itemsHtml = '<p style="color:#999; text-align:center; padding:0.5rem;">لا توجد منتجات</p>';
     }
     
     // زر إلغاء الطلب
@@ -9934,7 +10356,7 @@ function displayOrderDetail(order) {
         `;
     } else if (orderStatus === 'cancelled') {
         cancelButtonHtml = `
-            <button class="btn-action btn-cancel" disabled style="opacity:0.6; cursor:not-allowed;">
+            <button class="btn-action btn-cancel" disabled style="opacity:0.6; cursor:not-allowed; background:#e5e7eb; color:#9ca3af;">
                 <i class="fas fa-ban"></i>
                 ${currentLang === 'ar' ? 'تم الإلغاء' : 'Cancelled'}
             </button>
@@ -9947,79 +10369,87 @@ function displayOrderDetail(order) {
     )}`;
     
     detailDiv.innerHTML = `
-        <div class="order-detail-container">
-            <!-- رأس الطلب -->
-            <div class="order-detail-header">
-                <div class="order-number">
-                    <i class="fas fa-receipt" style="color:#E5C97B;"></i>
-                    <span>#${orderNum}</span>
-                </div>
-                <div class="order-status-badge-large ${statusInfo.class}">
-                    <i class="fas ${statusInfo.icon}"></i>
-                    ${statusInfo.text}
-                </div>
-            </div>
+        <div class="order-detail-wrapper">
+            <!-- زر الرجوع المدمج -->
+            <button class="order-detail-back" onclick="goBackToProfile()">
+                <i class="fas fa-arrow-right"></i>
+                ${currentLang === 'ar' ? 'رجوع للطلبات' : 'Back to Orders'}
+            </button>
             
-            <!-- معلومات الطلب -->
-            <div class="order-detail-info">
-                <div class="info-item">
-                    <span class="label">${currentLang === 'ar' ? 'التاريخ' : 'Date'}</span>
-                    <span class="value">${orderDate}</span>
-                </div>
-                <div class="info-item">
-                    <span class="label">${currentLang === 'ar' ? 'رقم الطلب' : 'Order #'}</span>
-                    <span class="value">${orderNum}</span>
-                </div>
-            </div>
-            
-            <!-- المنتجات -->
-            <div class="order-items-list">
-                <div class="section-title">
-                    <i class="fas fa-box-open"></i>
-                    ${currentLang === 'ar' ? 'المنتجات' : 'Products'}
-                </div>
-                ${itemsHtml}
-            </div>
-            
-            <!-- بيانات العميل -->
-            <div class="order-customer-info">
-                <div class="section-title">
-                    <i class="fas fa-user"></i>
-                    ${currentLang === 'ar' ? 'بيانات العميل' : 'Customer Info'}
-                </div>
-                <div class="customer-row">
-                    <div class="field">
-                        <span class="label">${currentLang === 'ar' ? 'الاسم' : 'Name'}</span>
-                        <span class="value">${customerName}</span>
+            <div class="order-detail-container">
+                <!-- رأس الطلب -->
+                <div class="order-detail-header">
+                    <div class="order-number">
+                        <i class="fas fa-receipt" style="color:#E5C97B;"></i>
+                        <span>#${orderNum}</span>
                     </div>
-                    <div class="field">
-                        <span class="label">${currentLang === 'ar' ? 'الهاتف' : 'Phone'}</span>
-                        <span class="value">${customerPhone}</span>
-                    </div>
-                    <div class="field">
-                        <span class="label">${currentLang === 'ar' ? 'العنوان' : 'Address'}</span>
-                        <span class="value">${customerAddress}</span>
+                    <div class="order-status-badge-large ${statusInfo.class}">
+                        <i class="fas ${statusInfo.icon}"></i>
+                        ${statusInfo.text}
                     </div>
                 </div>
-            </div>
-            
-            <!-- الإجمالي -->
-            <div class="order-total-box">
-                <span class="total-label">${currentLang === 'ar' ? 'إجمالي الطلب' : 'Order Total'}</span>
-                <span class="total-value">${orderTotal} <small>ج.م</small></span>
-            </div>
-            
-            <!-- الأزرار -->
-            <div class="order-actions">
-                <button class="btn-action btn-back" onclick="goBackToProfile()">
-                    <i class="fas fa-arrow-right"></i>
-                    ${currentLang === 'ar' ? 'رجوع للطلبات' : 'Back to Orders'}
-                </button>
-                ${cancelButtonHtml}
-                <a href="${whatsappUrl}" target="_blank" class="btn-action btn-whatsapp" style="text-decoration:none;">
-                    <i class="fab fa-whatsapp"></i>
-                    ${currentLang === 'ar' ? 'تواصل معنا' : 'Contact Us'}
-                </a>
+                
+                <!-- معلومات الطلب -->
+                <div class="order-detail-info">
+                    <div class="info-item">
+                        <span class="label">${currentLang === 'ar' ? 'التاريخ' : 'Date'}</span>
+                        <span class="value">${orderDate}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">${currentLang === 'ar' ? 'رقم الطلب' : 'Order #'}</span>
+                        <span class="value">${orderNum}</span>
+                    </div>
+                </div>
+                
+                <!-- المنتجات -->
+                <div class="order-items-list">
+                    <div class="section-title">
+                        <i class="fas fa-box-open"></i>
+                        ${currentLang === 'ar' ? 'المنتجات' : 'Products'}
+                    </div>
+                    ${itemsHtml}
+                </div>
+                
+                <!-- بيانات العميل -->
+                <div class="order-customer-info">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i>
+                        ${currentLang === 'ar' ? 'بيانات العميل' : 'Customer Info'}
+                    </div>
+                    <div class="customer-row">
+                        <div class="field">
+                            <span class="label">${currentLang === 'ar' ? 'الاسم' : 'Name'}</span>
+                            <span class="value">${customerName}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">${currentLang === 'ar' ? 'الهاتف' : 'Phone'}</span>
+                            <span class="value">${customerPhone}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">${currentLang === 'ar' ? 'العنوان' : 'Address'}</span>
+                            <span class="value">${customerAddress || '---'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الإجمالي -->
+                <div class="order-total-box">
+                    <span class="total-label">${currentLang === 'ar' ? 'إجمالي الطلب' : 'Order Total'}</span>
+                    <span class="total-value">${orderTotal} <small>ج.م</small></span>
+                </div>
+                
+                <!-- الأزرار -->
+                <div class="order-actions">
+                    <button class="btn-action btn-back" onclick="goBackToProfile()">
+                        <i class="fas fa-arrow-right"></i>
+                        ${currentLang === 'ar' ? 'رجوع' : 'Back'}
+                    </button>
+                    ${cancelButtonHtml}
+                    <a href="${whatsappUrl}" target="_blank" class="btn-action btn-whatsapp" style="text-decoration:none;">
+                        <i class="fab fa-whatsapp"></i>
+                        ${currentLang === 'ar' ? 'تواصل معنا' : 'Contact Us'}
+                    </a>
+                </div>
             </div>
         </div>
     `;
