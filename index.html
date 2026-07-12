@@ -4053,314 +4053,211 @@
     }
 }
 /* ============================================
-   📱 تحسينات الجوال - Mobile Responsive
+   🎨 تحسين شريط الأدوات - تصميم أنيق
    ============================================ */
 
-/* تحسين شريط الأدوات للجوال */
-@media (max-width: 768px) {
-    /* تصغير الأزرار في التولبار */
-    .products-toolbar {
-        padding: 0.6rem 0.8rem;
-        flex-direction: column;
-        gap: 0.6rem;
-    }
-    
-    .products-toolbar .toolbar-left {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .products-toolbar .toolbar-right {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    /* تصغير أزرار التصنيفات وجعلها أكثر تناسقاً */
-    .category-filter {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.3rem;
-        justify-content: center;
-        width: 100%;
-    }
-    
-    .category-btn {
-        padding: 4px 10px;
-        font-size: 0.6rem;
-        border-radius: 20px;
-        flex: 0 1 auto;
-        min-width: 50px;
-        text-align: center;
-    }
-    
-    .category-btn i {
-        font-size: 0.5rem;
-        margin-left: 2px;
-    }
-    
-    /* تصغير أزرار تبديل العرض والترتيب */
-    .view-toggle button {
-        padding: 4px 10px;
-        font-size: 0.7rem;
-    }
-    
-    .sort-select {
-        padding: 4px 10px;
-        font-size: 0.7rem;
-        border-radius: 8px;
-    }
-    
-    /* شبكة المنتجات - عمودين */
-    .products-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.6rem;
-    }
-    
-    /* تصغير الكروت */
-    .product-card {
-        border-radius: 12px;
-    }
-    
-    .product-card .product-carousel-container .carousel-images img {
-        height: 140px;
-    }
-    
-    .product-card .product-info {
-        padding: 0.6rem 0.5rem 0.5rem;
-    }
-    
-    .product-card .product-title {
-        font-size: 0.7rem;
-        margin-bottom: 0.2rem;
-    }
-    
-    .product-card .product-price {
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
-    }
-    
-    .product-card .product-price::after {
-        font-size: 0.6rem;
-    }
-    
-    .product-card .btn {
-        padding: 5px 10px;
-        font-size: 0.65rem;
-        border-radius: 8px;
-    }
-    
-    .product-card .product-meta {
-        font-size: 0.55rem;
-        gap: 0.4rem;
-    }
-    
-    .product-card .product-badge {
-        padding: 2px 8px;
-        font-size: 0.5rem;
-        top: 8px;
-        right: 8px;
-    }
-    
-    .product-card .stock-bar {
-        height: 2px;
-        margin-top: 0.3rem;
-    }
-    
-    .product-card .quick-add-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 0.7rem;
-        bottom: 60px;
-        left: 6px;
-    }
-    
-    .product-card .product-rating i {
-        font-size: 0.55rem;
-    }
-    
-    .product-card .product-rating span {
-        font-size: 0.55rem;
-    }
-    
-    /* 📱 عرض القائمة (list view) للجوال */
-    .products-grid.list-view .product-card {
-        flex-direction: column;
-        padding: 0.4rem;
-    }
-    
-    .products-grid.list-view .product-card .product-carousel-container {
-        width: 100%;
-    }
-    
-    .products-grid.list-view .product-card .product-carousel-container .carousel-images img {
-        height: 150px;
-    }
-    
-    .products-grid.list-view .product-card .product-info {
-        padding: 0.4rem;
-        width: 100%;
-    }
-    
-    .products-grid.list-view .product-card .btn {
-        width: 100%;
-        padding: 5px;
-        font-size: 0.65rem;
-    }
-    
-    /* تحسين الهيدر للجوال */
-    .header {
-        padding: 0.3rem 3%;
-        min-height: 56px;
-    }
-    
-    .hamburger {
-        width: 32px;
-        height: 32px;
-        gap: 4px;
-    }
-    
-    .hamburger .bar {
-        width: 16px;
-        height: 2px;
-    }
-    
-    .hamburger .bar:nth-child(1) { width: 14px; }
-    .hamburger .bar:nth-child(2) { width: 18px; }
-    .hamburger .bar:nth-child(3) { width: 12px; }
-    
-    .logo-svg {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .header-left {
-        gap: 6px;
-    }
-    
-    .header-right {
-        gap: 8px;
-    }
-    
-    .search-btn {
-        font-size: 0.9rem;
-    }
-    
-    .cart-icon {
-        font-size: 1rem;
-    }
-    
-    .cart-count {
-        font-size: 0.55rem;
-        padding: 1px 4px;
-        top: -6px;
-        right: -8px;
-    }
-    
-    .lang-toggle {
-        padding: 3px 10px;
-        font-size: 0.65rem;
-    }
-    
-    .user-avatar {
-        width: 30px;
-        height: 30px;
-        font-size: 0.75rem;
-    }
-    
-    .user-avatar-img {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .google-login-btn {
-        padding: 4px 10px;
-        font-size: 0.65rem;
-    }
-    
-    /* تحسين عنوان المنتجات */
-    .products-header h2 {
-        font-size: 1rem;
-    }
-    
-    .products-header .product-count {
-        font-size: 0.65rem;
-    }
-    
-    .section {
-        padding: 0.8rem 2%;
-    }
+/* شريط الأدوات الرئيسي */
+.products-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+    background: #ffffff;
+    padding: 0.8rem 1.2rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(229, 201, 123, 0.12);
+    transition: all 0.3s ease;
+}
+
+/* الجانب الأيسر (التصنيفات) */
+.products-toolbar .toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    flex: 2;
+    min-width: 200px;
+}
+
+/* الجانب الأيمن (الترتيب + العرض) */
+.products-toolbar .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 150px;
+}
+
+/* ===== أزرار التصنيفات ===== */
+.category-filter {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.category-btn {
+    padding: 6px 14px;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    background: #f1f3f5;
+    color: #6b7280;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Cairo', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.category-btn i {
+    font-size: 0.65rem;
+    opacity: 0.7;
+}
+
+.category-btn:hover {
+    background: #e5e7eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #E5C97B, #d4b05a);
+    color: #164E63;
+    border-color: #E5C97B;
+    box-shadow: 0 4px 15px rgba(229, 201, 123, 0.35);
+    font-weight: 700;
+}
+
+.category-btn.active i {
+    opacity: 1;
+}
+
+/* ===== قائمة الترتيب ===== */
+.sort-select {
+    padding: 6px 14px 6px 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 25px;
+    background: #fff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #164E63;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+    outline: none;
+    appearance: auto;
+    -webkit-appearance: auto;
+    min-width: 110px;
+}
+
+.sort-select:hover {
+    border-color: #E5C97B;
+}
+
+.sort-select:focus {
+    border-color: #E5C97B;
+    box-shadow: 0 0 0 3px rgba(229, 201, 123, 0.15);
+}
+
+/* ===== أزرار تبديل العرض ===== */
+.view-toggle {
+    display: flex;
+    gap: 3px;
+    background: #f1f3f5;
+    padding: 3px;
+    border-radius: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+.view-toggle button {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 20px;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.view-toggle button:hover {
+    color: #164E63;
+    background: rgba(22, 78, 99, 0.05);
+}
+
+.view-toggle button.active {
+    background: #fff;
+    color: #164E63;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== عدد المنتجات ===== */
+.product-count {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f8f9fa;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #f0f0f0;
+}
+
+.product-count i {
+    color: #E5C97B;
+    font-size: 0.65rem;
+}
+
+.product-count #product-count-number {
+    color: #164E63;
+    font-weight: 700;
 }
 
 /* ============================================
-   📱 تحسينات للشاشات الصغيرة جداً (480px)
+   📱 تحسينات الجوال
    ============================================ */
-@media (max-width: 480px) {
-    .products-grid {
-        grid-template-columns: 1fr 1fr;
+@media (max-width: 768px) {
+    .products-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.6rem 0.8rem;
         gap: 0.5rem;
+        border-radius: 12px;
     }
     
-    .category-btn {
-        padding: 3px 8px;
-        font-size: 0.55rem;
-        min-width: 40px;
+    .products-toolbar .toolbar-left {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        flex: unset;
+        min-width: unset;
     }
     
-    .product-card .product-carousel-container .carousel-images img {
-        height: 120px;
+    .products-toolbar .toolbar-right {
+        flex-direction: row;
+        justify-content: space-between;
+        flex: unset;
+        min-width: unset;
+        gap: 0.4rem;
+        flex-wrap: wrap;
     }
     
-    .product-card .product-title {
-        font-size: 0.6rem;
-    }
-    
-    .product-card .product-price {
-        font-size: 0.8rem;
-    }
-    
-    .product-card .btn {
-        font-size: 0.55rem;
-        padding: 4px 8px;
-    }
-    
-    .product-card .product-meta {
-        font-size: 0.5rem;
-    }
-    
-    .product-card .product-badge {
-        padding: 1px 6px;
-        font-size: 0.45rem;
-        top: 5px;
-        right: 5px;
-    }
-    
-    .product-card .quick-add-btn {
-        width: 24px;
-        height: 24px;
-        font-size: 0.6rem;
-        bottom: 50px;
-        left: 4px;
-    }
-    
-    .product-card .product-rating i {
-        font-size: 0.5rem;
-    }
-    
-    .product-card .product-rating span {
-        font-size: 0.5rem;
-    }
-    
-    .product-card .stock-bar {
-        height: 1.5px;
-    }
-    
-    /* شريط التصنيفات يصبح قابل للتمرير */
+    /* التصنيفات تصبح قابلة للتمرير */
     .category-filter {
         flex-wrap: nowrap;
         overflow-x: auto;
-        justify-content: flex-start;
         padding: 0.2rem 0;
+        gap: 0.3rem;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
@@ -4371,49 +4268,455 @@
     
     .category-btn {
         flex: 0 0 auto;
+        padding: 4px 12px;
+        font-size: 0.65rem;
+        border-radius: 20px;
         white-space: nowrap;
+    }
+    
+    .category-btn i {
         font-size: 0.55rem;
+    }
+    
+    .sort-select {
+        font-size: 0.65rem;
+        padding: 4px 10px 4px 8px;
+        min-width: 90px;
+        border-radius: 20px;
+    }
+    
+    .view-toggle button {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+    
+    .product-count {
+        font-size: 0.65rem;
         padding: 3px 10px;
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-toolbar {
+        padding: 0.4rem 0.6rem;
+        gap: 0.4rem;
+        border-radius: 10px;
+    }
+    
+    .products-toolbar .toolbar-right {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+    }
+    
+    .sort-select {
+        width: 100%;
+        min-width: unset;
+        font-size: 0.6rem;
+        padding: 4px 10px;
+    }
+    
+    .view-toggle {
+        align-self: center;
+        padding: 2px;
+    }
+    
+    .view-toggle button {
+        padding: 3px 8px;
+        font-size: 0.65rem;
+    }
+    
+    .category-btn {
+        padding: 3px 10px;
+        font-size: 0.55rem;
+        border-radius: 16px;
+    }
+    
+    .product-count {
+        font-size: 0.55rem;
+        padding: 2px 8px;
+        align-self: center;
     }
 }
 
 /* ============================================
-   🏷️ تحسين عرض التصنيفات للجوال (قائمة منسدلة)
+   🎯 تحسين عنوان القسم مع العدد
+   ============================================ */
+.products-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.products-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #164E63;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.products-header h2 i {
+    color: #E5C97B;
+    font-size: 1.1rem;
+}
+
+.products-header .product-count {
+    font-size: 0.75rem;
+    background: #f1f5f9;
+    padding: 4px 14px;
+    border-radius: 25px;
+    border: 1px solid #e5e7eb;
+}
+
+@media (max-width: 480px) {
+    .products-header h2 {
+        font-size: 1rem;
+    }
+    .products-header h2 i {
+        font-size: 0.9rem;
+    }
+    .products-header .product-count {
+        font-size: 0.6rem;
+        padding: 3px 10px;
+    }
+}
+/* ============================================
+   🦈 تحسينات الفوتر - تصميم عصري
+   ============================================ */
+
+.footer {
+    background: linear-gradient(135deg, #0A2F3F, #164E63);
+    color: #fff;
+    padding: 1.2rem 5% 0.6rem;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #E5C97B, #c9a646, #E5C97B);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2rem;
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== كل قسم في الفوتر ===== */
+.footer-section {
+    padding: 0.3rem;
+    text-align: center;
+}
+
+.footer-section .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 0.2rem;
+}
+
+.footer-section .section-title img,
+.footer-section .section-title svg {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.footer-section .section-title span {
+    color: #E5C97B;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.footer-section .sub-text {
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 0.2rem;
+}
+
+/* ===== صف الأرقام - جنب بعضها ===== */
+.footer-numbers {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin: 0.2rem 0;
+}
+
+.footer-numbers .phone-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.06);
+    padding: 3px 10px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s ease;
+    direction: ltr;
+}
+
+.footer-numbers .phone-item:hover {
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-1px);
+}
+
+.footer-numbers .phone-item i {
+    color: #E5C97B;
+    font-size: 0.5rem;
+}
+
+/* ===== أزرار التواصل ===== */
+.footer-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 0.2rem;
+}
+
+.footer-buttons .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.6rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.footer-buttons .btn-link i {
+    font-size: 0.65rem;
+}
+
+/* زر واتساب */
+.footer-buttons .btn-whatsapp {
+    background: #25D366;
+    color: #fff;
+}
+
+.footer-buttons .btn-whatsapp:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* زر الشركة */
+.footer-buttons .btn-company {
+    background: linear-gradient(135deg, #E5C97B, #c9a646);
+    color: #164E63;
+}
+
+.footer-buttons .btn-company:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(229, 201, 123, 0.3);
+}
+
+/* زر نبض */
+.footer-buttons .btn-nabd {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-buttons .btn-nabd:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+}
+
+/* ===== السطر السفلي ===== */
+.footer-bottom {
+    text-align: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin-top: 0.5rem;
+    font-size: 0.5rem;
+    color: rgba(255,255,255,0.25);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footer-bottom .highlight {
+    color: #E5C97B;
+}
+
+/* ============================================
+   📱 تحسينات الجوال - تصغير الأيقونات والأزرار
    ============================================ */
 @media (max-width: 600px) {
-    /* إخفاء أزرار التصنيفات الطويلة واستخدام قائمة منسدلة */
-    .category-filter {
-        display: none;
+    .footer {
+        padding: 0.8rem 3% 0.4rem;
     }
     
-    .products-toolbar .toolbar-left {
-        flex-direction: column;
-        align-items: stretch;
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
     }
     
-    /* قائمة منسدلة بديلة */
-    .mobile-category-select {
-        display: block !important;
-        width: 100%;
-        padding: 8px 12px;
-        border: 2px solid #E5C97B;
+    .footer-section {
+        padding: 0.2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        padding-bottom: 0.5rem;
+    }
+    
+    .footer-section:last-child {
+        border-bottom: none;
+    }
+    
+    .footer-section .section-title img,
+    .footer-section .section-title svg {
+        width: 22px;
+        height: 22px;
+    }
+    
+    .footer-section .section-title span {
+        font-size: 0.7rem;
+    }
+    
+    .footer-section .sub-text {
+        font-size: 0.45rem;
+    }
+    
+    /* الأرقام جنب بعضها */
+    .footer-numbers {
+        gap: 0.4rem;
+    }
+    
+    .footer-numbers .phone-item {
+        font-size: 0.5rem;
+        padding: 2px 8px;
         border-radius: 12px;
-        background: #fff;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #164E63;
-        font-family: 'Cairo', sans-serif;
-        outline: none;
-        appearance: auto;
-        -webkit-appearance: auto;
     }
     
-    .mobile-category-select:focus {
-        box-shadow: 0 0 0 3px rgba(229, 201, 123, 0.2);
+    .footer-numbers .phone-item i {
+        font-size: 0.45rem;
+    }
+    
+    /* الأزرار مصغرة */
+    .footer-buttons {
+        gap: 0.3rem;
+    }
+    
+    .footer-buttons .btn-link {
+        font-size: 0.5rem;
+        padding: 3px 10px;
+        border-radius: 15px;
+    }
+    
+    .footer-buttons .btn-link i {
+        font-size: 0.5rem;
+    }
+    
+    .footer-bottom {
+        font-size: 0.4rem;
+        padding-top: 0.3rem;
+        margin-top: 0.3rem;
     }
 }
 
-/* إضافة القائمة المنسدلة للجوال عبر JavaScript */
+@media (max-width: 400px) {
+    .footer-numbers {
+        gap: 0.3rem;
+    }
+    
+    .footer-numbers .phone-item {
+        font-size: 0.45rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
+    
+    .footer-numbers .phone-item i {
+        font-size: 0.4rem;
+    }
+    
+    .footer-buttons .btn-link {
+        font-size: 0.45rem;
+        padding: 2px 8px;
+        border-radius: 12px;
+    }
+    
+    .footer-buttons .btn-link i {
+        font-size: 0.45rem;
+    }
+    
+    .footer-section .section-title span {
+        font-size: 0.6rem;
+    }
+}
+
+/* ============================================
+   🎨 تصميم بديل - في حال أردت تغيير الترتيب
+   ============================================ */
+/* يمكنك تفعيل هذا القسم إذا أردت ترتيب مختلف */
+
+
+@media (max-width: 600px) {
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .footer-section {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem 0.8rem;
+        padding: 0.3rem 0;
+    }
+    
+    .footer-section .section-title {
+        flex: 0 0 auto;
+    }
+    
+    .footer-section .sub-text {
+        display: none;
+    }
+    
+    .footer-numbers {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -5085,91 +5388,78 @@
     
 <footer class="footer">
     <div class="footer-content">
-        <!-- ===== القسم الأول: Tecno Shark - المطورين ===== -->
+        <!-- ===== القسم الأول: Tecno Shark ===== -->
         <div class="footer-section">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px;">
+            <div class="section-title">
                 <img src="https://i.ibb.co/Fk4jw8pR/4840e6da-a9c5-4858-a78d-8ceb60d1eaaa.png" 
                      alt="Tecno Shark" 
-                     style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;">
-                <span style="color: #E5C97B; font-size: 0.95rem; font-weight: 700;">
-                    <i class="fas fa-shark" style="font-size: 0.8rem;"></i> Tecno Shark
-                </span>
+                     style="width:28px; height:28px; object-fit:contain; border-radius:6px;">
+                <span><i class="fas fa-shark"></i> Tecno Shark</span>
             </div>
-            <p style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-bottom: 4px;">
-                تطوير وحلول تقنية
-            </p>
+            <div class="sub-text">تطوير وحلول تقنية</div>
             
-            <!-- أرقام المطورين -->
-            <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; margin-bottom: 4px;">
-                <span style="font-size: 0.65rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px;">
-                    <i class="fas fa-phone" style="color: #E5C97B; font-size: 0.55rem;"></i>
-                    <span style="direction: ltr;">01126125881</span>
+            <!-- الأرقام جنب بعضها -->
+            <div class="footer-numbers">
+                <span class="phone-item">
+                    <i class="fas fa-phone"></i>
+                    01126125881
                 </span>
-                <span style="font-size: 0.65rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px;">
-                    <i class="fas fa-phone" style="color: #E5C97B; font-size: 0.55rem;"></i>
-                    <span style="direction: ltr;">01144100018</span>
+                <span class="phone-item">
+                    <i class="fas fa-phone"></i>
+                    01144100018
                 </span>
             </div>
             
-            <!-- أزرار التواصل المصغرة -->
-            <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
-                <a href="https://wa.me/201126125881" target="_blank" rel="noopener noreferrer" 
-                   style="display: inline-flex; align-items: center; gap: 4px; background: #25D366; color: #fff; padding: 4px 12px; border-radius: 15px; text-decoration: none; font-size: 0.6rem; font-weight: 600; transition: all 0.3s ease;">
-                    <i class="fab fa-whatsapp" style="font-size: 0.7rem;"></i>
-                    واتساب
+            <!-- الأزرار جنب بعضها -->
+            <div class="footer-buttons">
+                <a href="https://wa.me/201126125881" target="_blank" rel="noopener noreferrer" class="btn-link btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i> واتساب
                 </a>
-                <a href="https://tecno-shark.vercel.app/" target="_blank" rel="noopener noreferrer" 
-                   style="display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #E5C97B, #c9a646); color: #164E63; padding: 4px 12px; border-radius: 15px; text-decoration: none; font-size: 0.6rem; font-weight: 600; transition: all 0.3s ease;">
-                    <i class="fas fa-shark" style="font-size: 0.65rem;"></i>
-                    الشركة
+                <a href="https://tecno-shark.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn-link btn-company">
+                    <i class="fas fa-shark"></i> الشركة
                 </a>
             </div>
         </div>
         
-        <!-- ===== القسم الثاني: نبض - الدعم الفني ===== -->
+        <!-- ===== القسم الثاني: نبض ===== -->
         <div class="footer-section">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 4px;">
-                <svg viewBox="0 0 100 100" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+            <div class="section-title">
+                <svg viewBox="0 0 100 100" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#E5C97B" stroke-width="1.5"/>
                     <text x="50" y="67" text-anchor="middle" fill="#164E63" font-size="28" font-weight="bold" font-family="'Cairo', sans-serif">نبض</text>
                 </svg>
-                <span style="color: #E5C97B; font-size: 0.95rem; font-weight: 700;">
-                    <i class="fas fa-heart" style="font-size: 0.8rem;"></i> نبض
-                </span>
+                <span><i class="fas fa-heart"></i> نبض</span>
             </div>
-            <p style="font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-bottom: 4px;">
-                متجر الهوديز العصرية
-            </p>
+            <div class="sub-text">متجر الهوديز العصرية</div>
             
-            <!-- رقم الدعم الفني -->
-            <div style="display: flex; flex-direction: column; gap: 2px; align-items: center; margin-bottom: 4px;">
-                <span style="font-size: 0.65rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 5px;">
-                    <i class="fas fa-phone" style="color: #E5C97B; font-size: 0.55rem;"></i>
-                    <span style="direction: ltr;">01553011171</span>
+            <!-- رقم الدعم -->
+            <div class="footer-numbers">
+                <span class="phone-item">
+                    <i class="fas fa-phone"></i>
+                    01553011171
                 </span>
-                <span style="font-size: 0.55rem; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 4px;">
-                    <i class="fas fa-clock" style="color: #E5C97B; font-size: 0.5rem;"></i>
+                <span class="phone-item" style="background:rgba(229,201,123,0.08); border-color:rgba(229,201,123,0.15);">
+                    <i class="fas fa-clock" style="color:#E5C97B;"></i>
                     جميع الأيام
                 </span>
             </div>
             
-            <!-- زر واتساب الدعم المصغر -->
-            <div style="display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;">
-                <a href="https://wa.me/201553011171" target="_blank" rel="noopener noreferrer" 
-                   style="display: inline-flex; align-items: center; gap: 4px; background: #25D366; color: #fff; padding: 4px 12px; border-radius: 15px; text-decoration: none; font-size: 0.6rem; font-weight: 600; transition: all 0.3s ease;">
-                    <i class="fab fa-whatsapp" style="font-size: 0.7rem;"></i>
-                    واتساب
+            <!-- أزرار الدعم -->
+            <div class="footer-buttons">
+                <a href="https://wa.me/201553011171" target="_blank" rel="noopener noreferrer" class="btn-link btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i> واتساب
+                </a>
+                <a href="#" class="btn-link btn-nabd">
+                    <i class="fas fa-store"></i> المتجر
                 </a>
             </div>
         </div>
     </div>
     
-    <!-- حقوق النشر المصغرة -->
-    <div class="footer-bottom" style="text-align: center; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 0.5rem; font-size: 0.5rem; color: rgba(255,255,255,0.3);">
-        <span style="color: #E5C97B;">
-            <i class="fas fa-shark" style="font-size: 0.5rem;"></i> Tecno Shark
-        </span>
-        <span style="margin: 0 4px;">|</span>
+    <!-- حقوق النشر -->
+    <div class="footer-bottom">
+        <span class="highlight"><i class="fas fa-shark"></i> Tecno Shark</span>
+        <span style="margin:0 4px;">|</span>
         جميع الحقوق محفوظة © 2026
     </div>
 </footer>
@@ -6194,6 +6484,97 @@ async function updateOrderStatus(orderNumberOrId, newStatus) {
         showToast(currentLang === 'ar' ? '❌ حدث خطأ في تحديث الحالة' : '❌ Error updating status', 'error');
     }
 }
+// ============================================
+// 📱 تحسين عرض التصنيفات للجوال
+// ============================================
+
+// دالة لإضافة قائمة منسدلة بديلة للتصنيفات عند الحاجة
+function enhanceMobileCategories() {
+    const filterContainer = document.getElementById('category-filter');
+    const toolbarLeft = document.querySelector('.products-toolbar .toolbar-left');
+    
+    if (!filterContainer || !toolbarLeft) return;
+    
+    // إذا كانت الشاشة صغيرة جداً، نضيف قائمة منسدلة اختيارية
+    if (window.innerWidth <= 480) {
+        // نتحقق إذا كانت القائمة المنسدلة موجودة مسبقاً
+        let mobileSelect = document.getElementById('mobile-category-select');
+        if (!mobileSelect) {
+            mobileSelect = document.createElement('select');
+            mobileSelect.id = 'mobile-category-select';
+            mobileSelect.className = 'mobile-category-select';
+            mobileSelect.style.cssText = `
+                display: none;
+                width: 100%;
+                padding: 6px 12px;
+                border: 2px solid #E5C97B;
+                border-radius: 25px;
+                background: #fff;
+                font-size: 0.7rem;
+                font-weight: 600;
+                color: #164E63;
+                font-family: 'Cairo', sans-serif;
+                outline: none;
+                margin-top: 0.2rem;
+            `;
+            
+            const categories = [
+                { value: 'all', label: '📋 الكل' },
+                { value: 'hoodies', label: '👕 هوديز' },
+                { value: 'shirts', label: '👕 تيشيرتات' },
+                { value: 'jackets', label: '🧥 جواكيت' },
+                { value: 'sale', label: '🏷️ عروض' }
+            ];
+            
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.value;
+                option.textContent = cat.label;
+                if (cat.value === currentCategory) option.selected = true;
+                mobileSelect.appendChild(option);
+            });
+            
+            mobileSelect.addEventListener('change', function() {
+                filterProducts(this.value);
+            });
+            
+            // إدراج القائمة في مكان مناسب
+            toolbarLeft.appendChild(mobileSelect);
+        }
+        
+        // إظهار/إخفاء القائمة المنسدلة حسب الحاجة
+        // نترك أزرار التصنيفات مرئية ولكن يمكن التمرير فيها
+        filterContainer.style.display = 'flex';
+        filterContainer.style.flexWrap = 'nowrap';
+        filterContainer.style.overflowX = 'auto';
+        filterContainer.style.gap = '0.3rem';
+        filterContainer.style.padding = '0.2rem 0';
+        
+        // إخفاء القائمة المنسدلة إذا كانت الأزرار كافية
+        const mobileSelect2 = document.getElementById('mobile-category-select');
+        if (mobileSelect2) {
+            mobileSelect2.style.display = 'none';
+        }
+    } else {
+        // في الشاشات الكبيرة، نعيد الأزرار إلى وضعها الطبيعي
+        filterContainer.style.display = 'flex';
+        filterContainer.style.flexWrap = 'wrap';
+        filterContainer.style.overflowX = 'visible';
+        filterContainer.style.gap = '0.4rem';
+        filterContainer.style.padding = '0';
+        
+        const mobileSelect = document.getElementById('mobile-category-select');
+        if (mobileSelect) {
+            mobileSelect.style.display = 'none';
+        }
+    }
+}
+
+// استدعاء عند تغيير حجم الشاشة
+window.addEventListener('resize', enhanceMobileCategories);
+
+// استدعاء عند تحميل الصفحة
+setTimeout(enhanceMobileCategories, 300);
 // 4. دالة عرض الإشعارات
 function showToast(message, type = 'success') {
     let toast = document.getElementById('toast');
@@ -7676,76 +8057,6 @@ const email = `${cleanUsername}@tecno.com`;
                 showToast('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
             }
         }
-        // ============================================
-// 📱 إضافة قائمة تصنيفات منسدلة للجوال
-// ============================================
-function addMobileCategorySelect() {
-    // التحقق إذا كانت الشاشة صغيرة
-    if (window.innerWidth > 600) {
-        // إزالة القائمة المنسدلة إذا كانت موجودة
-        const existingSelect = document.querySelector('.mobile-category-select');
-        if (existingSelect) existingSelect.remove();
-        // إظهار أزرار التصنيفات الأصلية
-        const filter = document.getElementById('category-filter');
-        if (filter) filter.style.display = 'flex';
-        return;
-    }
-    
-    // التحقق إذا كانت القائمة المنسدلة موجودة بالفعل
-    if (document.querySelector('.mobile-category-select')) return;
-    
-    const toolbar = document.querySelector('.products-toolbar .toolbar-left');
-    if (!toolbar) return;
-    
-    // إخفاء أزرار التصنيفات الأصلية
-    const filter = document.getElementById('category-filter');
-    if (filter) filter.style.display = 'none';
-    
-    // إنشاء القائمة المنسدلة
-    const select = document.createElement('select');
-    select.className = 'mobile-category-select';
-    select.id = 'mobile-category-select';
-    select.style.cssText = 'display:block; width:100%; padding:8px 12px; border:2px solid #E5C97B; border-radius:12px; background:#fff; font-size:0.8rem; font-weight:600; color:#164E63; font-family:"Cairo",sans-serif; outline:none; appearance:auto; -webkit-appearance:auto;';
-    
-    const categories = [
-        { value: 'all', label: '📋 الكل' },
-        { value: 'hoodies', label: '👕 هوديز' },
-        { value: 'shirts', label: '👕 تيشيرتات' },
-        { value: 'jackets', label: '🧥 جواكيت' },
-        { value: 'sale', label: '🏷️ عروض' }
-    ];
-    
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.value;
-        option.textContent = cat.label;
-        if (cat.value === currentCategory) option.selected = true;
-        select.appendChild(option);
-    });
-    
-    select.addEventListener('change', function() {
-        filterProducts(this.value);
-    });
-    
-    // إدراج القائمة في بداية التولبار
-    toolbar.insertBefore(select, toolbar.firstChild);
-}
-
-// استدعاء الدالة عند تغيير حجم الشاشة
-window.addEventListener('resize', addMobileCategorySelect);
-
-// استدعاء عند تحميل الصفحة
-setTimeout(addMobileCategorySelect, 500);
-
-// تعديل دالة filterProducts لتحديث القائمة المنسدلة أيضاً
-const originalFilterProducts = filterProducts;
-filterProducts = function(category) {
-    originalFilterProducts(category);
-    const mobileSelect = document.getElementById('mobile-category-select');
-    if (mobileSelect) {
-        mobileSelect.value = category;
-    }
-};
         // تحديث عداد السلة في القائمة الجانبية
 function updateSidebarCartCount() {
     const total = cart.reduce((a, i) => a + (i.quantity || 0), 0);
