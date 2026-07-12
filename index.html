@@ -6832,7 +6832,255 @@ function applyFiltersAndSort() {
     renderFilteredProducts(filtered);
     updateProductCount(filtered.length);
 }
+// ============================================
+// 🛡️ حماية أدوات المطور - منع فتح الكونسول
+// ============================================
 
+(function() {
+    'use strict';
+    
+    // ===== متغيرات =====
+    let devToolsOpen = false;
+    let devToolsCheckInterval = null;
+    const SECRET_KEY_CODES = ['t', 's']; // المفاتيح السريعة: T + S
+    let pressedKeys = [];
+    let secretModeActive = false;
+    
+    // ===== 1. منع الضغط على F12 =====
+    document.addEventListener('keydown', function(e) {
+        // منع F12
+        if (e.key === 'F12' || e.keyCode === 123) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        
+        // منع Ctrl+Shift+I (أدوات المطور)
+        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        
+        // منع Ctrl+Shift+J (الكونسول)
+        if (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        
+        // منع Ctrl+U (عرض المصدر)
+        if (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        
+        // منع Ctrl+Shift+C (اختيار العنصر)
+        if (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        
+        // ===== المفتاح السري الخاص: Ctrl+Shift+T+S =====
+        if (e.ctrlKey && e.shiftKey) {
+            const key = e.key.toLowerCase();
+            
+            // إذا كان المفتاح T أو S
+            if (key === 't' || key === 's') {
+                e.preventDefault();
+                
+                // إضافة المفتاح إلى قائمة المفاتيح المضغوطة
+                if (!pressedKeys.includes(key)) {
+                    pressedKeys.push(key);
+                }
+                
+                // التحقق من تطابق المفتاحين T و S
+                if (pressedKeys.length === 2) {
+                    const sortedKeys = [...pressedKeys].sort();
+                    if (sortedKeys[0] === 's' && sortedKeys[1] === 't') {
+                        // تم إدخال المفتاح السري بنجاح
+                        secretModeActive = true;
+                        pressedKeys = [];
+                        
+                        // إظهار إشعار للمستخدم
+                        showToast('🔓 تم فتح أدوات المطور', 'success');
+                        
+                        // إلغاء الحماية مؤقتاً للسماح بفتح الكونسول
+                        disableProtectionTemporarily();
+                        
+                        // إعادة تفعيل الحماية بعد 10 ثواني
+                        setTimeout(() => {
+                            secretModeActive = false;
+                            enableProtection();
+                            showToast('🔒 تم إعادة تفعيل الحماية', 'info');
+                        }, 10000);
+                    }
+                }
+                
+                // إعادة تعيين المفاتيح بعد 2 ثانية من عدم الضغط
+                clearTimeout(window.keyResetTimeout);
+                window.keyResetTimeout = setTimeout(() => {
+                    pressedKeys = [];
+                }, 2000);
+            }
+        }
+        
+        // منع Ctrl+Shift+T+S من فتح تبويب جديد (إذا تم الضغط على T فقط)
+        if (e.ctrlKey && e.shiftKey && e.key === 't') {
+            e.preventDefault();
+        }
+    }, true);
+    
+    // ===== 2. منع النقر بزر الماوس الأيمن =====
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+    }, true);
+    
+    // ===== 3. منع استخدام اختصارات الماوس (الضغط مع Ctrl) =====
+    document.addEventListener('mousedown', function(e) {
+        // منع Ctrl+Click (يفتح في تبويب جديد)
+        if (e.ctrlKey && e.button === 0) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+        
+        // منع زر الماوس الأوسط (يفتح في تبويب جديد)
+        if (e.button === 1) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+    
+    // ===== 4. كشف فتح أدوات المطور =====
+    function detectDevTools() {
+        // طريقة 1: فحص حجم النافذة
+        const widthThreshold = window.outerWidth - window.innerWidth > 160;
+        const heightThreshold = window.outerHeight - window.innerHeight > 160;
+        
+        // طريقة 2: فحص عنصر debugger (للكشف عن الفتح)
+        const devtoolsOpen = /./;
+        devtoolsOpen.toString = function() {
+            devToolsOpen = true;
+        };
+        
+        // طريقة 3: فحص الـ console.log (للكشف عن الفتح)
+        console.log('%c', devtoolsOpen);
+        
+        if (widthThreshold || heightThreshold || devToolsOpen) {
+            if (!secretModeActive) {
+                // إغلاق الكونسول بالقوة
+                try {
+                    // إغلاق نافذة أدوات المطور (في بعض المتصفحات)
+                    window.close();
+                } catch(e) {}
+                
+                // محاولة إغلاق الكونسول
+                try {
+                    console.clear();
+                } catch(e) {}
+                
+                // إعادة تحميل الصفحة إذا تم فتح الكونسول
+                if (!secretModeActive) {
+                    // منع إعادة التحميل المتكررة
+                    if (!window._devToolsReloaded) {
+                        window._devToolsReloaded = true;
+                        setTimeout(() => {
+                            window._devToolsReloaded = false;
+                        }, 5000);
+                        // لا نعيد تحميل الصفحة تلقائياً، فقط نمنع الفتح
+                        showToast('⚠️ أدوات المطور محظورة', 'error');
+                    }
+                }
+            }
+        }
+    }
+    
+    // ===== 5. فحص مستمر لكشف أدوات المطور =====
+    function startDevToolsDetection() {
+        if (devToolsCheckInterval) {
+            clearInterval(devToolsCheckInterval);
+        }
+        devToolsCheckInterval = setInterval(detectDevTools, 1000);
+    }
+    
+    // ===== 6. تعطيل الحماية مؤقتاً =====
+    function disableProtectionTemporarily() {
+        // إزالة مستمعات الأحداث المؤقتة (سيتم إعادة تفعيلها)
+        // هذا يسمح بفتح الكونسول
+        console.log('%c🔓 تم فتح أدوات المطور مؤقتاً', 'font-size:16px; color:#28a745;');
+    }
+    
+    // ===== 7. إعادة تفعيل الحماية =====
+    function enableProtection() {
+        console.log('%c🔒 تم إعادة تفعيل الحماية', 'font-size:16px; color:#dc3545;');
+    }
+    
+    // ===== 8. منع استخدام اختصار Ctrl+W لإغلاق التبويب =====
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && (e.key === 'w' || e.key === 'W' || e.keyCode === 87)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+    
+    // ===== 9. منع اختصار Alt+F4 (في بعض المتصفحات) =====
+    document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.key === 'F4') {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+    
+    // ===== 10. منع اختصار Ctrl+N (نافذة جديدة) =====
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && (e.key === 'n' || e.key === 'N' || e.keyCode === 78)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+    
+    // ===== 11. بدء الكشف =====
+    startDevToolsDetection();
+    
+    // ===== 12. إعادة تشغيل الكشف إذا تم تغيير حجم النافذة =====
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(detectDevTools, 500);
+    });
+    
+    // ===== 13. حماية إضافية: منع فتح الكونسول عبر الـ URL =====
+    (function() {
+        // منع استخدام javascript: في شريط العنوان
+        const originalOpen = window.open;
+        window.open = function(url, name, features) {
+            if (url && typeof url === 'string' && url.toLowerCase().startsWith('javascript:')) {
+                return null;
+            }
+            return originalOpen.apply(this, arguments);
+        };
+    })();
+    
+    // ===== 14. عرض إشعار عند محاولة فتح الكونسول =====
+    function showProtectionMessage() {
+        console.log('%c🛡️ أدوات المطور محظورة في هذا الموقع', 'font-size:14px; color:#dc3545; font-weight:bold;');
+        console.log('%c🔑 لفتح أدوات المطور استخدم: Ctrl+Shift+T+S', 'font-size:14px; color:#E5C97B; font-weight:bold;');
+    }
+    showProtectionMessage();
+    
+    console.log('✅ حماية أدوات المطور مفعلة');
+    console.log('🔑 مفتاح الفتح: Ctrl + Shift + T + S');
+    
+})();
 // عرض المنتجات المفلترة
 function renderFilteredProducts(filtered) {
     const container = document.getElementById('all-products');
