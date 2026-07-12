@@ -6373,39 +6373,7 @@
         const TELEGRAM_BOT_TOKEN = '8931293118:AAHT6Ws1-_QPMQ4YxPExzf9CzHtTOjcJmtE';
         const TELEGRAM_CHAT_ID = '6326397164';
 
-// دالة إرسال رسالة إلى تيليجرام
-async function sendTelegramMessage(message) {
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-        console.log('⚠️ لم يتم إعداد التيليجرام');
-        return false;
-    }
-    
-    try {
-        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'HTML',
-                disable_web_page_preview: true
-            })
-        });
-        
-        const result = await response.json();
-        if (result.ok) {
-            console.log('✅ تم إرسال الطلب إلى تيليجرام');
-            return true;
-        } else {
-            console.error('❌ فشل الإرسال:', result.description);
-            return false;
-        }
-    } catch (error) {
-        console.error('❌ خطأ:', error);
-        return false;
-    }
-}
+
 
 // دالة تنسيق رسالة الطلب
 function formatOrderMessageForTelegram(order) {
@@ -9788,9 +9756,7 @@ function renderAllProducts() {
 // 🔙 الرجوع إلى صفحة الملف الشخصي
 // ============================================
 
-function goBackToProfile() {
-    showSection('profile');
-}
+
         
        
         
@@ -10253,6 +10219,10 @@ if (document.readyState === 'loading') {
 // 📄 دوال صفحة تفاصيل الطلب
 // ============================================
 
+// ============================================
+// 📄 دوال صفحة تفاصيل الطلب
+// ============================================
+
 // عرض تفاصيل الطلب
 function showOrderDetail(orderNumberOrId) {
     let order = null;
@@ -10291,6 +10261,184 @@ function showOrderDetail(orderNumberOrId) {
     displayOrderDetail(order);
 }
 
+
+
+// ============================================
+// ❌ إلغاء الطلب
+// ============================================
+async function cancelOrder(orderNumberOrId) {
+    if (!orderNumberOrId) {
+        showToast('❌ لا يمكن تحديد الطلب', 'error');
+        return;
+    }
+    
+    // تأكيد الإلغاء
+    const confirmMessage = currentLang === 'ar' 
+        ? `⚠️ هل أنت متأكد من إلغاء الطلب #${orderNumberOrId}؟ لا يمكن التراجع عن هذا الإجراء.`
+        : `⚠️ Are you sure you want to cancel order #${orderNumberOrId}? This cannot be undone.`;
+    
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+    
+    showToast('⏳ جاري إلغاء الطلب...', 'info');
+    
+    try {
+        let found = false;
+        let userPhone = null;
+        let userName = null;
+        
+        // 1️⃣ تحديث في all_orders
+        const snapshot = await database.ref('all_orders').once('value');
+        const allOrders = snapshot.val();
+        
+        if (allOrders) {
+            for (const key in allOrders) {
+                const order = allOrders[key];
+                const orderNum = order.orderNumber || order.number || order.orderId || '';
+                
+                if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
+                    userPhone = order.user?.phone || null;
+                    userName = order.user?.name || 'العميل';
+                    
+                    await database.ref(`all_orders/${key}`).update({
+                        status: 'cancelled',
+                        updatedAt: new Date().toISOString(),
+                        cancelledBy: 'customer',
+                        cancelledAt: new Date().toISOString()
+                    });
+                    found = true;
+                    console.log(`✅ تم إلغاء الطلب ${orderNumberOrId} من قبل العميل`);
+                    break;
+                }
+            }
+        }
+        
+        // 2️⃣ تحديث في مسار المستخدم
+        if (currentFirebaseUser) {
+            const userOrders = await loadUserOrders(currentFirebaseUser.uid);
+            const updatedOrders = userOrders.map(o => {
+                const orderNum = o.orderNumber || o.number || o.orderId || '';
+                if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
+                    o.status = 'cancelled';
+                    o.updatedAt = new Date().toISOString();
+                    o.cancelledBy = 'customer';
+                    o.cancelledAt = new Date().toISOString();
+                    if (!userPhone) userPhone = o.user?.phone || null;
+                    if (!userName) userName = o.user?.name || 'العميل';
+                }
+                return o;
+            });
+            await saveUserOrders(currentFirebaseUser.uid, updatedOrders);
+        }
+        
+        // 3️⃣ تحديث الطلبات المحلية
+        orders = orders.map(o => {
+            const orderNum = o.orderNumber || o.number || o.orderId || '';
+            if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
+                o.status = 'cancelled';
+                o.updatedAt = new Date().toISOString();
+                o.cancelledBy = 'customer';
+                o.cancelledAt = new Date().toISOString();
+                if (!userPhone) userPhone = o.user?.phone || null;
+                if (!userName) userName = o.user?.name || 'العميل';
+            }
+            return o;
+        });
+        localStorage.setItem('orders', JSON.stringify(orders));
+        
+        // 4️⃣ إرسال رسالة إلى تيليجرام
+        if (found) {
+            const cancelMessage = `
+❌ <b>تم إلغاء الطلب من قبل العميل</b>
+━━━━━━━━━━━━━━━━━━━━
+📋 <b>رقم الطلب:</b> #${orderNumberOrId}
+👤 <b>العميل:</b> ${userName || 'غير محدد'}
+📞 <b>الهاتف:</b> ${userPhone || 'غير محدد'}
+📅 <b>تاريخ الإلغاء:</b> ${new Date().toLocaleString('ar-EG')}
+━━━━━━━━━━━━━━━━━━━━
+🛒 <b>متجر نبض</b>
+            `;
+            
+            await sendTelegramMessage(cancelMessage);
+            
+            // 5️⃣ إرسال رسالة تأكيد للعميل عبر واتساب
+            if (userPhone) {
+                const customerMessage = `
+🛍️ متجر نبض
+━━━━━━━━━━━━━━━━━━━━
+❌ تم إلغاء طلبك رقم #${orderNumberOrId} بنجاح.
+📅 تاريخ الإلغاء: ${new Date().toLocaleString('ar-EG')}
+
+إذا كان لديك أي استفسار، يمكنك التواصل معنا على هذا الرقم.
+━━━━━━━━━━━━━━━━━━━━
+🛒 نبض - أفضل الهوديز والملابس الرجالية 💙
+                `;
+                const cleanPhone = userPhone.replace(/\D/g, '');
+                const whatsappUrl = `https://wa.me/20${cleanPhone}?text=${encodeURIComponent(customerMessage)}`;
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+        
+        if (found) {
+            showToast('✅ تم إلغاء الطلب بنجاح', 'success');
+            
+            await renderProfileWithOrders();
+            if (typeof renderAllOrdersInAdmin === 'function') await renderAllOrdersInAdmin();
+            if (typeof renderAdminDashboard === 'function') await renderAdminDashboard();
+            if (typeof renderReports === 'function') await renderReports();
+            
+            setTimeout(() => {
+                goBackToProfile();
+            }, 1000);
+            
+        } else {
+            showToast('❌ لم يتم العثور على الطلب', 'error');
+        }
+        
+    } catch (error) {
+        console.error('خطأ في إلغاء الطلب:', error);
+        showToast('❌ حدث خطأ في إلغاء الطلب', 'error');
+    }
+}
+
+// ============================================
+// 📨 دالة إرسال رسالة تيليجرام (نسخة واحدة فقط)
+// ============================================
+async function sendTelegramMessage(message) {
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+        console.log('⚠️ لم يتم إعداد التيليجرام');
+        return false;
+    }
+    
+    try {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML',
+                disable_web_page_preview: true
+            })
+        });
+        
+        const result = await response.json();
+        return result.ok;
+    } catch (error) {
+        console.error('خطأ في إرسال رسالة تيليجرام:', error);
+        return false;
+    }
+}
+
+// تعديل دالة goBackToProfile
+function goBackToProfile() {
+    showSection('profile');
+    // إعادة تحميل الطلبات
+    renderProfileWithOrders();
+}
+
 // عرض تفاصيل الطلب - التصميم الجديد
 function displayOrderDetail(order) {
     const detailDiv = document.getElementById('order-detail-full');
@@ -10298,13 +10446,15 @@ function displayOrderDetail(order) {
     
     if (!order) {
         detailDiv.innerHTML = `
-            <div class="order-detail-container" style="text-align:center; padding:3rem 2rem;">
-                <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#dc3545; margin-bottom:1rem; display:block;"></i>
-                <h3 style="color:#164E63;">${currentLang === 'ar' ? 'الطلب غير موجود' : 'Order not found'}</h3>
-                <p style="color:#999; margin-bottom:1.5rem;">${currentLang === 'ar' ? 'لم نتمكن من العثور على هذا الطلب' : 'We could not find this order'}</p>
-                <button class="btn" onclick="goBackToProfile()" style="width:auto; padding:10px 30px;">
-                    <i class="fas fa-arrow-right"></i> ${currentLang === 'ar' ? 'رجوع للطلبات' : 'Back to Orders'}
-                </button>
+            <div class="order-detail-wrapper">
+                <div class="order-detail-container" style="text-align:center; padding:3rem 2rem;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#dc3545; margin-bottom:1rem; display:block;"></i>
+                    <h3 style="color:#164E63;">${currentLang === 'ar' ? 'الطلب غير موجود' : 'Order not found'}</h3>
+                    <p style="color:#999; margin-bottom:1.5rem;">${currentLang === 'ar' ? 'لم نتمكن من العثور على هذا الطلب' : 'We could not find this order'}</p>
+                    <button class="btn" onclick="goBackToProfile()" style="width:auto; padding:10px 30px; margin:0 auto;">
+                        <i class="fas fa-arrow-right"></i> ${currentLang === 'ar' ? 'رجوع للطلبات' : 'Back to Orders'}
+                    </button>
+                </div>
             </div>
         `;
         showSection('order-detail-page');
@@ -10454,217 +10604,6 @@ function displayOrderDetail(order) {
         </div>
     `;
     
-    showSection('order-detail-page');
-}
-
-// ============================================
-// ❌ إلغاء الطلب
-// ============================================
-async function cancelOrder(orderNumberOrId) {
-    if (!orderNumberOrId) {
-        showToast('❌ لا يمكن تحديد الطلب', 'error');
-        return;
-    }
-    
-    // تأكيد الإلغاء
-    const confirmMessage = currentLang === 'ar' 
-        ? `⚠️ هل أنت متأكد من إلغاء الطلب #${orderNumberOrId}؟ لا يمكن التراجع عن هذا الإجراء.`
-        : `⚠️ Are you sure you want to cancel order #${orderNumberOrId}? This cannot be undone.`;
-    
-    if (!confirm(confirmMessage)) {
-        return;
-    }
-    
-    showToast('⏳ جاري إلغاء الطلب...', 'info');
-    
-    try {
-        let orderData = null;
-        let found = false;
-        let userPhone = null;
-        let userName = null;
-        
-        // 1️⃣ تحديث في all_orders
-        const snapshot = await database.ref('all_orders').once('value');
-        const allOrders = snapshot.val();
-        
-        if (allOrders) {
-            for (const key in allOrders) {
-                const order = allOrders[key];
-                const orderNum = order.orderNumber || order.number || order.orderId || '';
-                
-                if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
-                    orderData = order;
-                    userPhone = order.user?.phone || null;
-                    userName = order.user?.name || 'العميل';
-                    
-                    await database.ref(`all_orders/${key}`).update({
-                        status: 'cancelled',
-                        updatedAt: new Date().toISOString(),
-                        cancelledBy: 'customer',
-                        cancelledAt: new Date().toISOString()
-                    });
-                    found = true;
-                    console.log(`✅ تم إلغاء الطلب ${orderNumberOrId} من قبل العميل`);
-                    break;
-                }
-            }
-        }
-        
-        // 2️⃣ تحديث في مسار المستخدم
-        if (currentFirebaseUser) {
-            const userOrders = await loadUserOrders(currentFirebaseUser.uid);
-            const updatedOrders = userOrders.map(o => {
-                const orderNum = o.orderNumber || o.number || o.orderId || '';
-                if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
-                    o.status = 'cancelled';
-                    o.updatedAt = new Date().toISOString();
-                    o.cancelledBy = 'customer';
-                    o.cancelledAt = new Date().toISOString();
-                    if (!userPhone) userPhone = o.user?.phone || null;
-                    if (!userName) userName = o.user?.name || 'العميل';
-                }
-                return o;
-            });
-            await saveUserOrders(currentFirebaseUser.uid, updatedOrders);
-        }
-        
-        // 3️⃣ تحديث الطلبات المحلية
-        orders = orders.map(o => {
-            const orderNum = o.orderNumber || o.number || o.orderId || '';
-            if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
-                o.status = 'cancelled';
-                o.updatedAt = new Date().toISOString();
-                o.cancelledBy = 'customer';
-                o.cancelledAt = new Date().toISOString();
-                if (!userPhone) userPhone = o.user?.phone || null;
-                if (!userName) userName = o.user?.name || 'العميل';
-            }
-            return o;
-        });
-        localStorage.setItem('orders', JSON.stringify(orders));
-        
-        // 4️⃣ إرسال رسالة إلى تيليجرام
-        if (found) {
-            // رسالة الإلغاء للتيليجرام
-            const cancelMessage = `
-❌ <b>تم إلغاء الطلب من قبل العميل</b>
-━━━━━━━━━━━━━━━━━━━━
-📋 <b>رقم الطلب:</b> #${orderNumberOrId}
-👤 <b>العميل:</b> ${userName || 'غير محدد'}
-📞 <b>الهاتف:</b> ${userPhone || 'غير محدد'}
-📅 <b>تاريخ الإلغاء:</b> ${new Date().toLocaleString('ar-EG')}
-━━━━━━━━━━━━━━━━━━━━
-🛒 <b>متجر نبض</b>
-            `;
-            
-            await sendTelegramMessage(cancelMessage);
-            
-            // 5️⃣ إرسال رسالة تأكيد للعميل عبر واتساب (اختياري)
-            if (userPhone) {
-                const customerMessage = `
-🛍️ متجر نبض
-━━━━━━━━━━━━━━━━━━━━
-❌ تم إلغاء طلبك رقم #${orderNumberOrId} بنجاح.
-📅 تاريخ الإلغاء: ${new Date().toLocaleString('ar-EG')}
-
-إذا كان لديك أي استفسار، يمكنك التواصل معنا على هذا الرقم.
-━━━━━━━━━━━━━━━━━━━━
-🛒 نبض - أفضل الهوديز والملابس الرجالية 💙
-                `;
-                const cleanPhone = userPhone.replace(/\D/g, '');
-                const whatsappUrl = `https://wa.me/20${cleanPhone}?text=${encodeURIComponent(customerMessage)}`;
-                // فتح واتساب في نافذة جديدة
-                window.open(whatsappUrl, '_blank');
-            }
-        }
-        
-        if (found) {
-            showToast('✅ تم إلغاء الطلب بنجاح', 'success');
-            
-            // تحديث جميع الواجهات
-            await renderProfileWithOrders();
-            if (typeof renderAllOrdersInAdmin === 'function') await renderAllOrdersInAdmin();
-            if (typeof renderAdminDashboard === 'function') await renderAdminDashboard();
-            if (typeof renderReports === 'function') await renderReports();
-            
-            // العودة إلى صفحة الطلبات
-            setTimeout(() => {
-                goBackToProfile();
-            }, 1000);
-            
-        } else {
-            showToast('❌ لم يتم العثور على الطلب', 'error');
-        }
-        
-    } catch (error) {
-        console.error('خطأ في إلغاء الطلب:', error);
-        showToast('❌ حدث خطأ في إلغاء الطلب', 'error');
-    }
-}
-
-// دالة مساعدة لإرسال رسالة تيليجرام
-async function sendTelegramMessage(message) {
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-        console.log('⚠️ لم يتم إعداد التيليجرام');
-        return false;
-    }
-    
-    try {
-        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-                parse_mode: 'HTML',
-                disable_web_page_preview: true
-            })
-        });
-        
-        const result = await response.json();
-        return result.ok;
-    } catch (error) {
-        console.error('خطأ في إرسال رسالة تيليجرام:', error);
-        return false;
-    }
-}
-
-// تعديل دالة goBackToProfile
-function goBackToProfile() {
-    showSection('profile');
-    // إعادة تحميل الطلبات
-    renderProfileWithOrders();
-}
-
-// دالة displayOrderDetail الجديدة
-function displayOrderDetail(order) {
-    const detailDiv = document.getElementById('order-detail-full');
-    if (!detailDiv) return;
-    
-    if (!order) {
-        detailDiv.innerHTML = '<div class="product-detail-full-page"><p style="color:red;">الطلب غير موجود</p></div>';
-        showSection('order-detail-page');
-        return;
-    }
-    
-    const orderNum = order.orderNumber || order.number || '---';
-    const orderTotal = order.total || 0;
-    const orderDate = order.date || (order.createdAt ? new Date(order.createdAt).toLocaleString() : '---');
-    const orderStatus = order.status || 'pending';
-    
-    detailDiv.innerHTML = `
-        <div class="product-detail-full-page">
-            <h2>${currentLang === 'ar' ? 'تفاصيل الطلب' : 'Order Details'} #${orderNum}</h2>
-            <p><strong>${currentLang === 'ar' ? 'التاريخ:' : 'Date:'}</strong> ${orderDate}</p>
-            <p><strong>${currentLang === 'ar' ? 'الحالة:' : 'Status:'}</strong> <span class="order-status status-${orderStatus}">${orderStatus === 'pending' ? (currentLang === 'ar' ? 'معلق' : 'Pending') : orderStatus === 'delivered' ? (currentLang === 'ar' ? 'تم التسليم' : 'Delivered') : orderStatus === 'cancelled' ? (currentLang === 'ar' ? 'ملغي' : 'Cancelled') : (currentLang === 'ar' ? 'مرتجع' : 'Returned')}</span></p>
-            <h3>${currentLang === 'ar' ? 'المنتجات:' : 'Products:'}</h3>
-            ${order.items ? order.items.map(i => `<p>${i.name} (${i.size}/${i.color}) x${i.quantity} = ${(i.price || 0) * (i.quantity || 0)} ج.م</p>`).join('') : '<p>لا توجد منتجات</p>'}
-            <h3>${currentLang === 'ar' ? 'بيانات العميل:' : 'Customer Info:'}</h3>
-            <p>${order.user?.name || '---'}<br>${order.user?.phone || '---'}<br>${order.user?.address || '---'}</p>
-            <h3>${currentLang === 'ar' ? 'الإجمالي:' : 'Total:'} ${orderTotal} ج.م</h3>
-        </div>
-    `;
     showSection('order-detail-page');
 }
         
