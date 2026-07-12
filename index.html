@@ -4681,6 +4681,388 @@
         font-size: 0.65rem;
     }
 }
+/* ============================================
+   📄 صفحة تفاصيل الطلب - Order Details
+   ============================================ */
+
+/* الحاوية الرئيسية */
+.order-detail-container {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: 0 8px 35px rgba(22, 78, 99, 0.08);
+    border: 1px solid rgba(229, 201, 123, 0.12);
+    max-width: 650px;
+    margin: 0 auto;
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* رأس الطلب */
+.order-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    margin-bottom: 1.5rem;
+}
+
+.order-detail-header .order-number {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #164E63;
+}
+
+.order-detail-header .order-number span {
+    color: #E5C97B;
+}
+
+.order-detail-header .order-status-badge-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.order-detail-header .order-status-badge-large.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.order-detail-header .order-status-badge-large.delivered {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.order-detail-header .order-status-badge-large.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.order-detail-header .order-status-badge-large.returned {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+/* معلومات الطلب */
+.order-detail-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: #f8f9fa;
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.order-detail-info .info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-detail-info .info-item .label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.order-detail-info .info-item .value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+    margin-top: 2px;
+}
+
+/* قائمة المنتجات */
+.order-items-list {
+    margin: 1.5rem 0;
+}
+
+.order-items-list .section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #164E63;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-items-list .section-title i {
+    color: #E5C97B;
+}
+
+.order-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    border-right: 3px solid #E5C97B;
+    transition: all 0.2s ease;
+}
+
+.order-item-card:hover {
+    background: #f0f1f2;
+}
+
+.order-item-card .item-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-item-card .item-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+}
+
+.order-item-card .item-details {
+    font-size: 0.7rem;
+    color: #888;
+}
+
+.order-item-card .item-price {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #E5C97B;
+}
+
+/* بيانات العميل */
+.order-customer-info {
+    background: #f8f9fa;
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    margin: 1rem 0 1.5rem;
+}
+
+.order-customer-info .section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #164E63;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-customer-info .section-title i {
+    color: #E5C97B;
+}
+
+.order-customer-info .customer-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.order-customer-info .customer-row .field {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-customer-info .customer-row .field .label {
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    color: #999;
+    font-weight: 600;
+}
+
+.order-customer-info .customer-row .field .value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #164E63;
+}
+
+/* إجمالي الطلب */
+.order-total-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.2rem;
+    background: linear-gradient(135deg, #164E63, #0A2F3F);
+    border-radius: 16px;
+    color: #fff;
+    margin: 1.5rem 0;
+}
+
+.order-total-box .total-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+.order-total-box .total-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #E5C97B;
+}
+
+.order-total-box .total-value small {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+/* أزرار الإجراءات */
+.order-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.order-actions .btn-action {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.order-actions .btn-back {
+    background: #e5e7eb;
+    color: #4b5563;
+}
+
+.order-actions .btn-back:hover {
+    background: #d1d5db;
+    transform: translateY(-2px);
+}
+
+.order-actions .btn-cancel {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.order-actions .btn-cancel:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.2);
+}
+
+.order-actions .btn-cancel:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.order-actions .btn-whatsapp {
+    background: #25D366;
+    color: #fff;
+}
+
+.order-actions .btn-whatsapp:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+}
+
+/* ============================================
+   📱 تحسينات الجوال
+   ============================================ */
+@media (max-width: 600px) {
+    .order-detail-container {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+    
+    .order-detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .order-detail-header .order-number {
+        font-size: 1rem;
+    }
+    
+    .order-detail-header .order-status-badge-large {
+        font-size: 0.7rem;
+        padding: 4px 14px;
+    }
+    
+    .order-detail-info {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.8rem;
+    }
+    
+    .order-detail-info .info-item .value {
+        font-size: 0.75rem;
+    }
+    
+    .order-item-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+        padding: 0.5rem 0.8rem;
+    }
+    
+    .order-item-card .item-price {
+        align-self: flex-end;
+    }
+    
+    .order-customer-info .customer-row {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .order-total-box {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.3rem;
+        padding: 0.8rem;
+    }
+    
+    .order-total-box .total-value {
+        font-size: 1.3rem;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+    }
+    
+    .order-actions .btn-action {
+        flex: unset;
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .order-detail-info {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+    
+    .order-detail-container {
+        padding: 0.8rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -5072,9 +5454,10 @@
 </section>
     
     <section id="order-detail-page" class="section">
-        <button class="btn" onclick="goBackToProfile()" style="width: auto; margin-bottom: 0.8rem;"><i class="fas fa-arrow-right"></i> رجوع للطلبات</button>
-        <div id="order-detail-full"></div>
-    </section>
+    <div id="order-detail-full">
+        <!-- سيتم تعبئتها بواسطة JavaScript -->
+    </div>
+</section>
     
     <section id="login" class="section">
         <h2 style="font-size: 1.3rem;">تسجيل الدخول</h2>
@@ -9444,29 +9827,384 @@ if (document.readyState === 'loading') {
         
     
         
-        // إصلاح دالة showOrderDetail
+       // ============================================
+// 📄 دوال صفحة تفاصيل الطلب
+// ============================================
+
+// عرض تفاصيل الطلب
 function showOrderDetail(orderNumberOrId) {
     let order = null;
     
+    // البحث في الطلبات المحلية
     if (orders && orders.length > 0) {
-        order = orders.find(o => o.number === orderNumberOrId || o.orderNumber === orderNumberOrId);
+        order = orders.find(o => 
+            o.number === orderNumberOrId || 
+            o.orderNumber === orderNumberOrId ||
+            o.orderId === orderNumberOrId
+        );
     }
     
+    // إذا لم يوجد، البحث في Firebase
     if (!order && currentFirebaseUser) {
         (async () => {
             try {
                 const snapshot = await database.ref(`users/${currentFirebaseUser.uid}/orders`).once('value');
                 const userOrders = snapshot.val();
                 if (userOrders && Array.isArray(userOrders)) {
-                    order = userOrders.find(o => o.number === orderNumberOrId || o.orderNumber === orderNumberOrId);
+                    order = userOrders.find(o => 
+                        o.number === orderNumberOrId || 
+                        o.orderNumber === orderNumberOrId ||
+                        o.orderId === orderNumberOrId
+                    );
                 }
-            } catch(e) {}
-            displayOrderDetail(order);
+                displayOrderDetail(order);
+            } catch(e) {
+                console.error('خطأ في جلب الطلب:', e);
+                displayOrderDetail(null);
+            }
         })();
         return;
     }
     
     displayOrderDetail(order);
+}
+
+// عرض تفاصيل الطلب - التصميم الجديد
+function displayOrderDetail(order) {
+    const detailDiv = document.getElementById('order-detail-full');
+    if (!detailDiv) return;
+    
+    if (!order) {
+        detailDiv.innerHTML = `
+            <div class="order-detail-container" style="text-align:center; padding:3rem 2rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:#dc3545; margin-bottom:1rem; display:block;"></i>
+                <h3 style="color:#164E63;">${currentLang === 'ar' ? 'الطلب غير موجود' : 'Order not found'}</h3>
+                <p style="color:#999; margin-bottom:1.5rem;">${currentLang === 'ar' ? 'لم نتمكن من العثور على هذا الطلب' : 'We could not find this order'}</p>
+                <button class="btn" onclick="goBackToProfile()" style="width:auto; padding:10px 30px;">
+                    <i class="fas fa-arrow-right"></i> ${currentLang === 'ar' ? 'رجوع للطلبات' : 'Back to Orders'}
+                </button>
+            </div>
+        `;
+        showSection('order-detail-page');
+        return;
+    }
+    
+    const orderNum = order.orderNumber || order.number || order.orderId || '---';
+    const orderTotal = order.total || 0;
+    const orderDate = order.date || (order.createdAt ? new Date(order.createdAt).toLocaleString('ar-EG') : '---');
+    const orderStatus = order.status || 'pending';
+    const customerName = order.user?.name || 'غير محدد';
+    const customerPhone = order.user?.phone || 'غير محدد';
+    const customerAddress = order.user?.address || 'غير محدد';
+    
+    // حالة الطلب
+    const statusMap = {
+        'pending': { text: currentLang === 'ar' ? 'معلق' : 'Pending', icon: 'fa-clock', class: 'pending' },
+        'delivered': { text: currentLang === 'ar' ? 'تم التسليم' : 'Delivered', icon: 'fa-check-circle', class: 'delivered' },
+        'cancelled': { text: currentLang === 'ar' ? 'ملغي' : 'Cancelled', icon: 'fa-times-circle', class: 'cancelled' },
+        'returned': { text: currentLang === 'ar' ? 'مرتجع' : 'Returned', icon: 'fa-undo-alt', class: 'returned' }
+    };
+    const statusInfo = statusMap[orderStatus] || statusMap['pending'];
+    const isCancellable = orderStatus === 'pending';
+    
+    // المنتجات
+    let itemsHtml = '';
+    if (order.items && Array.isArray(order.items) && order.items.length > 0) {
+        itemsHtml = order.items.map(item => `
+            <div class="order-item-card">
+                <div class="item-info">
+                    <span class="item-name">${item.name || 'منتج'}</span>
+                    <span class="item-details">${item.size || ''} ${item.color ? `- ${item.color}` : ''} × ${item.quantity || 0}</span>
+                </div>
+                <span class="item-price">${(item.price || 0) * (item.quantity || 0)} ج.م</span>
+            </div>
+        `).join('');
+    } else {
+        itemsHtml = '<p style="color:#999; text-align:center;">لا توجد منتجات</p>';
+    }
+    
+    // زر إلغاء الطلب
+    let cancelButtonHtml = '';
+    if (isCancellable) {
+        cancelButtonHtml = `
+            <button class="btn-action btn-cancel" onclick="cancelOrder('${orderNum}')">
+                <i class="fas fa-times-circle"></i>
+                ${currentLang === 'ar' ? 'إلغاء الطلب' : 'Cancel Order'}
+            </button>
+        `;
+    } else if (orderStatus === 'cancelled') {
+        cancelButtonHtml = `
+            <button class="btn-action btn-cancel" disabled style="opacity:0.6; cursor:not-allowed;">
+                <i class="fas fa-ban"></i>
+                ${currentLang === 'ar' ? 'تم الإلغاء' : 'Cancelled'}
+            </button>
+        `;
+    }
+    
+    // زر واتساب
+    const whatsappUrl = `https://wa.me/201553011171?text=${encodeURIComponent(
+        `🛍️ استفسار عن الطلب #${orderNum}\n👤 ${customerName}\n📞 ${customerPhone}\n📦 التفاصيل: ${order.items ? order.items.map(i => `${i.name} x${i.quantity}`).join(', ') : ''}\n💰 الإجمالي: ${orderTotal} ج.م`
+    )}`;
+    
+    detailDiv.innerHTML = `
+        <div class="order-detail-container">
+            <!-- رأس الطلب -->
+            <div class="order-detail-header">
+                <div class="order-number">
+                    <i class="fas fa-receipt" style="color:#E5C97B;"></i>
+                    <span>#${orderNum}</span>
+                </div>
+                <div class="order-status-badge-large ${statusInfo.class}">
+                    <i class="fas ${statusInfo.icon}"></i>
+                    ${statusInfo.text}
+                </div>
+            </div>
+            
+            <!-- معلومات الطلب -->
+            <div class="order-detail-info">
+                <div class="info-item">
+                    <span class="label">${currentLang === 'ar' ? 'التاريخ' : 'Date'}</span>
+                    <span class="value">${orderDate}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">${currentLang === 'ar' ? 'رقم الطلب' : 'Order #'}</span>
+                    <span class="value">${orderNum}</span>
+                </div>
+            </div>
+            
+            <!-- المنتجات -->
+            <div class="order-items-list">
+                <div class="section-title">
+                    <i class="fas fa-box-open"></i>
+                    ${currentLang === 'ar' ? 'المنتجات' : 'Products'}
+                </div>
+                ${itemsHtml}
+            </div>
+            
+            <!-- بيانات العميل -->
+            <div class="order-customer-info">
+                <div class="section-title">
+                    <i class="fas fa-user"></i>
+                    ${currentLang === 'ar' ? 'بيانات العميل' : 'Customer Info'}
+                </div>
+                <div class="customer-row">
+                    <div class="field">
+                        <span class="label">${currentLang === 'ar' ? 'الاسم' : 'Name'}</span>
+                        <span class="value">${customerName}</span>
+                    </div>
+                    <div class="field">
+                        <span class="label">${currentLang === 'ar' ? 'الهاتف' : 'Phone'}</span>
+                        <span class="value">${customerPhone}</span>
+                    </div>
+                    <div class="field">
+                        <span class="label">${currentLang === 'ar' ? 'العنوان' : 'Address'}</span>
+                        <span class="value">${customerAddress}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- الإجمالي -->
+            <div class="order-total-box">
+                <span class="total-label">${currentLang === 'ar' ? 'إجمالي الطلب' : 'Order Total'}</span>
+                <span class="total-value">${orderTotal} <small>ج.م</small></span>
+            </div>
+            
+            <!-- الأزرار -->
+            <div class="order-actions">
+                <button class="btn-action btn-back" onclick="goBackToProfile()">
+                    <i class="fas fa-arrow-right"></i>
+                    ${currentLang === 'ar' ? 'رجوع للطلبات' : 'Back to Orders'}
+                </button>
+                ${cancelButtonHtml}
+                <a href="${whatsappUrl}" target="_blank" class="btn-action btn-whatsapp" style="text-decoration:none;">
+                    <i class="fab fa-whatsapp"></i>
+                    ${currentLang === 'ar' ? 'تواصل معنا' : 'Contact Us'}
+                </a>
+            </div>
+        </div>
+    `;
+    
+    showSection('order-detail-page');
+}
+
+// ============================================
+// ❌ إلغاء الطلب
+// ============================================
+async function cancelOrder(orderNumberOrId) {
+    if (!orderNumberOrId) {
+        showToast('❌ لا يمكن تحديد الطلب', 'error');
+        return;
+    }
+    
+    // تأكيد الإلغاء
+    const confirmMessage = currentLang === 'ar' 
+        ? `⚠️ هل أنت متأكد من إلغاء الطلب #${orderNumberOrId}؟ لا يمكن التراجع عن هذا الإجراء.`
+        : `⚠️ Are you sure you want to cancel order #${orderNumberOrId}? This cannot be undone.`;
+    
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+    
+    showToast('⏳ جاري إلغاء الطلب...', 'info');
+    
+    try {
+        let orderData = null;
+        let found = false;
+        let userPhone = null;
+        let userName = null;
+        
+        // 1️⃣ تحديث في all_orders
+        const snapshot = await database.ref('all_orders').once('value');
+        const allOrders = snapshot.val();
+        
+        if (allOrders) {
+            for (const key in allOrders) {
+                const order = allOrders[key];
+                const orderNum = order.orderNumber || order.number || order.orderId || '';
+                
+                if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
+                    orderData = order;
+                    userPhone = order.user?.phone || null;
+                    userName = order.user?.name || 'العميل';
+                    
+                    await database.ref(`all_orders/${key}`).update({
+                        status: 'cancelled',
+                        updatedAt: new Date().toISOString(),
+                        cancelledBy: 'customer',
+                        cancelledAt: new Date().toISOString()
+                    });
+                    found = true;
+                    console.log(`✅ تم إلغاء الطلب ${orderNumberOrId} من قبل العميل`);
+                    break;
+                }
+            }
+        }
+        
+        // 2️⃣ تحديث في مسار المستخدم
+        if (currentFirebaseUser) {
+            const userOrders = await loadUserOrders(currentFirebaseUser.uid);
+            const updatedOrders = userOrders.map(o => {
+                const orderNum = o.orderNumber || o.number || o.orderId || '';
+                if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
+                    o.status = 'cancelled';
+                    o.updatedAt = new Date().toISOString();
+                    o.cancelledBy = 'customer';
+                    o.cancelledAt = new Date().toISOString();
+                    if (!userPhone) userPhone = o.user?.phone || null;
+                    if (!userName) userName = o.user?.name || 'العميل';
+                }
+                return o;
+            });
+            await saveUserOrders(currentFirebaseUser.uid, updatedOrders);
+        }
+        
+        // 3️⃣ تحديث الطلبات المحلية
+        orders = orders.map(o => {
+            const orderNum = o.orderNumber || o.number || o.orderId || '';
+            if (orderNum === orderNumberOrId || orderNum.includes(orderNumberOrId) || orderNumberOrId.includes(orderNum)) {
+                o.status = 'cancelled';
+                o.updatedAt = new Date().toISOString();
+                o.cancelledBy = 'customer';
+                o.cancelledAt = new Date().toISOString();
+                if (!userPhone) userPhone = o.user?.phone || null;
+                if (!userName) userName = o.user?.name || 'العميل';
+            }
+            return o;
+        });
+        localStorage.setItem('orders', JSON.stringify(orders));
+        
+        // 4️⃣ إرسال رسالة إلى تيليجرام
+        if (found) {
+            // رسالة الإلغاء للتيليجرام
+            const cancelMessage = `
+❌ <b>تم إلغاء الطلب من قبل العميل</b>
+━━━━━━━━━━━━━━━━━━━━
+📋 <b>رقم الطلب:</b> #${orderNumberOrId}
+👤 <b>العميل:</b> ${userName || 'غير محدد'}
+📞 <b>الهاتف:</b> ${userPhone || 'غير محدد'}
+📅 <b>تاريخ الإلغاء:</b> ${new Date().toLocaleString('ar-EG')}
+━━━━━━━━━━━━━━━━━━━━
+🛒 <b>متجر نبض</b>
+            `;
+            
+            await sendTelegramMessage(cancelMessage);
+            
+            // 5️⃣ إرسال رسالة تأكيد للعميل عبر واتساب (اختياري)
+            if (userPhone) {
+                const customerMessage = `
+🛍️ متجر نبض
+━━━━━━━━━━━━━━━━━━━━
+❌ تم إلغاء طلبك رقم #${orderNumberOrId} بنجاح.
+📅 تاريخ الإلغاء: ${new Date().toLocaleString('ar-EG')}
+
+إذا كان لديك أي استفسار، يمكنك التواصل معنا على هذا الرقم.
+━━━━━━━━━━━━━━━━━━━━
+🛒 نبض - أفضل الهوديز والملابس الرجالية 💙
+                `;
+                const cleanPhone = userPhone.replace(/\D/g, '');
+                const whatsappUrl = `https://wa.me/20${cleanPhone}?text=${encodeURIComponent(customerMessage)}`;
+                // فتح واتساب في نافذة جديدة
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+        
+        if (found) {
+            showToast('✅ تم إلغاء الطلب بنجاح', 'success');
+            
+            // تحديث جميع الواجهات
+            await renderProfileWithOrders();
+            if (typeof renderAllOrdersInAdmin === 'function') await renderAllOrdersInAdmin();
+            if (typeof renderAdminDashboard === 'function') await renderAdminDashboard();
+            if (typeof renderReports === 'function') await renderReports();
+            
+            // العودة إلى صفحة الطلبات
+            setTimeout(() => {
+                goBackToProfile();
+            }, 1000);
+            
+        } else {
+            showToast('❌ لم يتم العثور على الطلب', 'error');
+        }
+        
+    } catch (error) {
+        console.error('خطأ في إلغاء الطلب:', error);
+        showToast('❌ حدث خطأ في إلغاء الطلب', 'error');
+    }
+}
+
+// دالة مساعدة لإرسال رسالة تيليجرام
+async function sendTelegramMessage(message) {
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+        console.log('⚠️ لم يتم إعداد التيليجرام');
+        return false;
+    }
+    
+    try {
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML',
+                disable_web_page_preview: true
+            })
+        });
+        
+        const result = await response.json();
+        return result.ok;
+    } catch (error) {
+        console.error('خطأ في إرسال رسالة تيليجرام:', error);
+        return false;
+    }
+}
+
+// تعديل دالة goBackToProfile
+function goBackToProfile() {
+    showSection('profile');
+    // إعادة تحميل الطلبات
+    renderProfileWithOrders();
 }
 
 // دالة displayOrderDetail الجديدة
