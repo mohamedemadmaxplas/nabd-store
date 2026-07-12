@@ -6957,49 +6957,11 @@ function applyFiltersAndSort() {
         }
     }, true);
     
-    // ===== 4. كشف فتح أدوات المطور =====
-    function detectDevTools() {
-        // طريقة 1: فحص حجم النافذة
-        const widthThreshold = window.outerWidth - window.innerWidth > 160;
-        const heightThreshold = window.outerHeight - window.innerHeight > 160;
-        
-        // طريقة 2: فحص عنصر debugger (للكشف عن الفتح)
-        const devtoolsOpen = /./;
-        devtoolsOpen.toString = function() {
-            devToolsOpen = true;
-        };
-        
-        // طريقة 3: فحص الـ console.log (للكشف عن الفتح)
-        console.log('%c', devtoolsOpen);
-        
-        if (widthThreshold || heightThreshold || devToolsOpen) {
-            if (!secretModeActive) {
-                // إغلاق الكونسول بالقوة
-                try {
-                    // إغلاق نافذة أدوات المطور (في بعض المتصفحات)
-                    window.close();
-                } catch(e) {}
-                
-                // محاولة إغلاق الكونسول
-                try {
-                    console.clear();
-                } catch(e) {}
-                
-                // إعادة تحميل الصفحة إذا تم فتح الكونسول
-                if (!secretModeActive) {
-                    // منع إعادة التحميل المتكررة
-                    if (!window._devToolsReloaded) {
-                        window._devToolsReloaded = true;
-                        setTimeout(() => {
-                            window._devToolsReloaded = false;
-                        }, 5000);
-                        // لا نعيد تحميل الصفحة تلقائياً، فقط نمنع الفتح
-                        showToast('⚠️ أدوات المطور محظورة', 'error');
-                    }
-                }
-            }
-        }
-    }
+   function detectDevTools() {
+    // ❌ منع إغلاق الصفحة نهائياً
+    // هذه الخاصية معطلة
+    return;  // ← أضف هذا السطر لإيقاف الكشف نهائياً
+}
     
     // ===== 5. فحص مستمر لكشف أدوات المطور =====
     function startDevToolsDetection() {
